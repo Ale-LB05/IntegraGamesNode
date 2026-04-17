@@ -1,9 +1,9 @@
 const express = require("express");
 const cors = require("cors");
-const jwt = require("jsonwebtoken"); // Usamos JWT
+const jwt = require("jsonwebtoken");
 const path = require("path");
 
-// CONEXIÓN DB
+// ================= CONEXIÓN DB =================
 const connection = require("./db");
 
 const app = express();
@@ -22,13 +22,17 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Para la
 // ================= MIDDLEWARE DE AUTENTICACIÓN =================
 function auth(req, res, next) {
   const header = req.headers.authorization;
+
   if (!header || !header.startsWith("Bearer ")) {
     return res.status(401).json({ error: "No autorizado. Inicia sesión." });
   }
+
   try {
-    req.user = jwt.verify(header.split(" ")[1], JWT_SECRET);
-    next();
-  } catch {
+    const token = header.split(" ")[1];
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded;
+    return next(); // Si todo está bien, pasamos a la siguiente ruta
+  } catch (error) {
     return res.status(401).json({ error: "Token inválido o expirado" });
   }
 }
@@ -56,6 +60,14 @@ app.post("/api/login", (req, res) => {
 
     const u = results[0];
 
+    // Validamos que el rol sea uno de los permitidos (opcional, pero buena práctica)
+    const rolesPermitidos = ["administrador", "promotor"];
+    if (!rolesPermitidos.includes(u.rol)) {
+      return res
+        .status(403)
+        .json({ error: "Rol no autorizado para ingresar al panel." });
+    }
+
     // Creamos el token
     const token = jwt.sign(
       { id: u.id_responsable, usuario: u.nombre, rol: u.rol },
@@ -79,7 +91,6 @@ app.get("/api/eventos_publicos", (req, res) => {
   });
 });
 
-// Guardar alumno (Registro público)
 // Guardar alumno y darle un Token para entrar al menú
 app.post("/api/guardar_alumno", (req, res) => {
   const { nombre, edad, id_evento, id_escuela } = req.body;
@@ -98,11 +109,11 @@ app.post("/api/guardar_alumno", (req, res) => {
       if (err)
         return res.status(500).json({ error: "Error al guardar el alumno" });
 
-      // IMPORTANTE: Creamos el token aquí para que el alumno pueda navegar
+      // Creamos el token para que el alumno pueda navegar
       const token = jwt.sign(
         { id: result.insertId, usuario: nombre, rol: "participante" },
         JWT_SECRET,
-        { expiresIn: "4h" }, // Les damos 4 horas para jugar
+        { expiresIn: "4h" }, // 4 horas para jugar
       );
 
       res.json({
@@ -115,54 +126,42 @@ app.post("/api/guardar_alumno", (req, res) => {
   );
 });
 
-// ================= RUTAS IMPORTADAS (Módulos separados) =================
+// ================= RUTAS IMPORTADAS =================
 
-// Escuelas es público para que el combobox de alumnos pueda leerlo sin token
-const escuelasRouter = require("./routes/cruds/escuelas");
-app.use("/api/escuelas", escuelasRouter);
+// Escuelas es público para el combobox
+app.use("/api/escuelas", require("./routes/cruds/escuelas"));
 
 // Rutas Protegidas por JWT
-// Busca estas líneas y déjalas tal cual:
-const menuRouter = require("./routes/menu");
-app.use("/api/menu", auth, menuRouter); // El 'auth' es vital para saber quién es el usuario
+app.use("/api/menu", auth, require("./routes/menu"));
+app.use("/api/perfil", auth, require("./routes/perfil"));
+app.use("/api/personal", auth, require("./routes/cruds/personal"));
+app.use("/api/eventos", auth, require("./routes/cruds/eventos"));
+app.use(
+  "/api/historial-eventos",
+  auth,
+  require("./routes/cruds/encargadoEvento"),
+);
+app.use("/api/historial-participantes", auth, require("./routes/cruds/lista"));
 
-const perfilRouter = require("./routes/perfil");
-app.use("/api/perfil", auth, perfilRouter);
-
-const personalRouter = require("./routes/cruds/personal");
-app.use("/api/personal", auth, personalRouter);
-
-const eventosRouter = require("./routes/cruds/eventos");
-app.use("/api/eventos", auth, eventosRouter);
-
-// Ruta para el historial de eventos
-const encargadoRouter = require("./routes/cruds/encargadoEvento");
-app.use("/api/historial-eventos", auth, encargadoRouter);
-
-// Ruta para la lista de participantes
-const listaRouter = require("./routes/cruds/lista");
-app.use("/api/historial-participantes", auth, listaRouter);
-
-// Ruta para la página del juego Code & Run
-const codeRunRouter = require("./routes/juegos/codeRun");
-app.use("/api/juegos/codeRun", auth, codeRunRouter);
-
-// Ruta para la página del juego Error 404
-const error404Router = require("./routes/juegos/error404");
-app.use("/api/juegos/error404", auth, error404Router);
-
-// Ruta para la página del juego Desafío Tech
-const desafioTechRouter = require("./routes/juegos/desafioTech");
-app.use("/api/juegos/desafioTech", auth, desafioTechRouter);
-
-// Ruta para guardar la encuesta de satisfacción
-const guardarEncuestaRouter = require("./routes/juegos/guardar_encuesta");
-app.use("/api/guardar_encuesta", auth, guardarEncuestaRouter);
+// Juegos y Encuestas
+app.use("/api/juegos/codeRun", auth, require("./routes/juegos/codeRun"));
+app.use("/api/juegos/error404", auth, require("./routes/juegos/error404"));
+app.use(
+  "/api/juegos/desafioTech",
+  auth,
+  require("./routes/juegos/desafioTech"),
+);
+app.use(
+  "/api/guardar_encuesta",
+  auth,
+  require("./routes/juegos/guardar_encuesta"),
+);
 
 // ================= OTRAS RUTAS PROTEGIDAS =================
+
 // Guardar encuesta
 app.post("/api/guardar_encuesta", auth, (req, res) => {
-  const usuario = req.user.usuario; // Sacamos el usuario del JWT
+  const usuario = req.user.usuario;
   const { calificacion, comentario, id_juego } = req.body;
 
   const sqlUser = "SELECT id_participante FROM participante WHERE nombre=?";
@@ -197,7 +196,7 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "frontend", "index.html"));
 });
 
-// ================= SERVIDOR =================
+// ================= INICIAR SERVIDOR =================
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

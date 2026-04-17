@@ -78,11 +78,14 @@ document
 
       // ===========================================================
       // TRUCO DE MAGIA: Guardamos al alumno en la sesión del navegador
-      // para que el menú principal cargue como 'participante'.
       // ===========================================================
-      localStorage.setItem("usuario", body.nombre);
-      localStorage.setItem("rol", "participante");
-      localStorage.setItem("token", "alumno_sin_token"); // Relleno para que no marque null
+
+      // Utilizamos los datos que nos devuelve el servidor para mayor seguridad
+      localStorage.setItem("usuario", data.usuario);
+      localStorage.setItem("rol", data.rol);
+
+      // ¡LA CORRECCIÓN CLAVE! Guardamos el token real que nos dio el servidor
+      localStorage.setItem("token", data.token);
 
       // Redirigimos al HTML del menú
       window.location.href = "/menu.html";

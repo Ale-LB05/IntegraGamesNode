@@ -8,7 +8,8 @@ router.get("/", (req, res) => {
   const rol = (req.user?.rol || "participante").toLowerCase();
   const nombreUsuario = req.user?.usuario || "Invitado";
 
-  const rolesStaff = ["administrador", "programador", "promotor"];
+  // Ya no existe el programador
+  const rolesStaff = ["administrador", "promotor"];
   const esStaff = rolesStaff.includes(rol);
 
   // 2. Respuesta base (Lo que ven los alumnos por defecto)
@@ -90,7 +91,7 @@ router.get("/", (req, res) => {
       });
     });
   }
-  // 4. SI ES ALUMNO: Enviamos la respuesta estática de inmediato (Sin errores de BD)
+  // 4. SI ES ALUMNO: Enviamos la respuesta estática de inmediato
   else {
     return res.json({ success: true, data: dataRespuesta });
   }
