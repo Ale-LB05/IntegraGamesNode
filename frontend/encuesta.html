@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Encuesta | IntegraGames</title>
+    <link rel="icon" href="/img/logo.png" />
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet" />
+    <style>
+      body {
+        background-color: #eef4ff;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .card-encuesta {
+        border-radius: 15px;
+        border: 1px solid #e3e6f0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        max-width: 500px;
+        width: 100%;
+        padding: 2.5rem;
+        background: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card-encuesta text-center">
+      <h3 class="font-weight-bold text-primary mb-2">
+        ¡Felicidades por terminar!
+      </h3>
+      <p class="text-muted mb-4">
+        Ayúdanos a mejorar contándonos qué te pareció el juego.
+      </p>
+
+      <form id="formEncuesta" class="text-left">
+        <div class="form-group mb-4">
+          <label class="font-weight-bold text-dark"
+            >Calificación (1 al 10):</label
+          >
+          <select
+            id="inputCalificacion"
+            class="form-control form-control-lg"
+            required
+          >
+            <option value="" disabled selected>
+              Selecciona una calificación...
+            </option>
+            <option value="10">10 - ¡Me encantó, increíble!</option>
+            <option value="9">9 - Muy bueno</option>
+            <option value="8">8 - Bueno</option>
+            <option value="7">7 - Entretenido</option>
+            <option value="6">6 - Pasable</option>
+            <option value="5">5 - Regular</option>
+            <option value="4">4 - Podría mejorar</option>
+            <option value="3">3 - No me gustó mucho</option>
+            <option value="2">2 - Aburrido</option>
+            <option value="1">1 - Pésimo</option>
+          </select>
+        </div>
+
+        <div class="form-group mb-4">
+          <label class="font-weight-bold text-dark"
+            >Deja un comentario (Opcional):</label
+          >
+          <textarea
+            id="inputComentario"
+            class="form-control"
+            rows="3"
+            placeholder="¿Qué te gustó más? ¿Qué cambiarías?"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary btn-lg btn-block font-weight-bold shadow-sm"
+          style="border-radius: 8px"
+        >
+          Enviar Respuestas
+        </button>
+      </form>
+    </div>
+
+    <script src="/js/encuesta.js"></script>
+  </body>
+</html>
