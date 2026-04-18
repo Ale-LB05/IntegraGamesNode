@@ -68,8 +68,10 @@ router.get("/", (req, res) => {
       }
 
       const hoy = new Date().toISOString().split("T")[0];
+
+      // NUEVO: Agregamos hora, lugar y ubicacion a la consulta SQL
       const sqlEv =
-        "SELECT nombre_evento, imagen_urls, observaciones, fecha FROM evento WHERE fecha >= ? ORDER BY fecha ASC";
+        "SELECT nombre_evento, imagen_urls, observaciones, fecha, hora, lugar, ubicacion FROM evento WHERE fecha >= ? ORDER BY fecha ASC";
 
       connection.query(sqlEv, [hoy], (errEv, resEv) => {
         if (!errEv) {
@@ -79,10 +81,14 @@ router.get("/", (req, res) => {
               const a = JSON.parse(e.imagen_urls);
               if (a.length > 0) img = `/uploads/eventos/${a[0]}`;
             } catch (errJ) {}
+
             return {
               nombre_evento: e.nombre_evento,
               observaciones: e.observaciones,
               fecha: e.fecha,
+              hora: e.hora, // Añadido
+              lugar: e.lugar, // Añadido
+              ubicacion: e.ubicacion, // Añadido
               imagen: img,
             };
           });

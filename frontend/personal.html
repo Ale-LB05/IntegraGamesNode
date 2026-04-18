@@ -219,14 +219,45 @@
             <h1 class="h3 mb-4 text-gray-800">Panel de personal</h1>
 
             <div class="card shadow mb-4">
-              <div class="card-header">
+              <div
+                class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center"
+              >
                 <button
-                  class="btn btn-success"
+                  class="btn btn-success mb-2 mb-md-0"
                   data-toggle="modal"
                   data-target="#modalCrear"
                 >
                   <i class="fas fa-plus"></i> Nuevo empleado
                 </button>
+
+                <div
+                  class="d-flex flex-column flex-sm-row gap-2"
+                  style="gap: 10px"
+                >
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"
+                        ><i class="fas fa-search"></i
+                      ></span>
+                    </div>
+                    <input
+                      type="text"
+                      id="buscarNombre"
+                      class="form-control"
+                      placeholder="Buscar por nombre..."
+                    />
+                  </div>
+
+                  <select
+                    id="buscarRol"
+                    class="form-control"
+                    style="min-width: 150px"
+                  >
+                    <option value="">Todos los roles</option>
+                    <option value="administrador">Administrador</option>
+                    <option value="promotor">Promotor</option>
+                  </select>
+                </div>
               </div>
 
               <div class="card-body">

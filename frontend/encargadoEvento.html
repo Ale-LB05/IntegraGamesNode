@@ -55,20 +55,22 @@
         <hr class="sidebar-divider" />
         <div class="sidebar-heading">Administración</div>
 
-        <li class="nav-item">
-          <a class="nav-link" href="/personal.html"
-            ><i class="fas fa-user"></i> <span>Personal</span></a
-          >
+        <li class="nav-item" id="menuPersonal">
+          <a class="nav-link" href="/personal.html">
+            <i class="fas fa-user"></i> <span>Personal</span>
+          </a>
         </li>
+
         <li class="nav-item">
-          <a class="nav-link" href="/eventos.html"
-            ><i class="fas fa-calendar-alt"></i> <span>Eventos</span></a
-          >
+          <a class="nav-link" href="/eventos.html">
+            <i class="fas fa-calendar-alt"></i> <span>Eventos</span>
+          </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/escuelas.html"
-            ><i class="fas fa-school"></i> <span>Escuelas</span></a
-          >
+
+        <li class="nav-item" id="menuEscuelas">
+          <a class="nav-link" href="/escuelas.html">
+            <i class="fas fa-school"></i> <span>Escuelas</span>
+          </a>
         </li>
 
         <li class="nav-item active">
@@ -200,10 +202,26 @@
           <div class="container-fluid mt-4">
             <h1 class="h3 mb-4 text-gray-800">Historial de Eventos</h1>
             <div class="card shadow mb-4">
-              <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">
+              <div
+                class="card-header py-3 d-flex flex-column flex-md-row justify-content-between align-items-center"
+              >
+                <h6 class="m-0 font-weight-bold text-primary mb-2 mb-md-0">
                   Lista de Registros
                 </h6>
+
+                <div class="input-group" style="max-width: 350px">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"
+                      ><i class="fas fa-search"></i
+                    ></span>
+                  </div>
+                  <input
+                    type="text"
+                    id="filtroHistorial"
+                    class="form-control"
+                    placeholder="Buscar evento, lugar o encargado..."
+                  />
+                </div>
               </div>
               <div class="card-body">
                 <div class="table-responsive">
@@ -265,9 +283,26 @@
     <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/js/sb-admin-2.min.js"></script>
     <script src="/js/encargadoEvento.js"></script>
+
     <script>
+      // 1. Obtener datos del usuario
+      const usuario = localStorage.getItem("usuario");
+      const rol = (localStorage.getItem("rol") || "").toLowerCase();
+
+      // 2. Colocar nombre en la barra superior
       document.getElementById("nombreUsuarioTop").textContent =
-        localStorage.getItem("usuario") + " - " + localStorage.getItem("rol");
+        usuario + " - " + rol;
+
+      // 3. Lógica de restricción para Promotor
+      if (rol === "promotor") {
+        const itemPersonal = document.getElementById("menuPersonal");
+        const itemEscuelas = document.getElementById("menuEscuelas");
+
+        if (itemPersonal) itemPersonal.style.display = "none";
+        if (itemEscuelas) itemEscuelas.style.display = "none";
+      }
+
+      // 4. Función para cerrar sesión
       function cerrarSesion() {
         localStorage.clear();
         window.location.href = "/registroAdmin/login.html";

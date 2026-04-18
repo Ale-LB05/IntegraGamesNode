@@ -1,7 +1,17 @@
 const API = "/api/escuelas";
-window.onload = cargar;
+let escuelasOriginales = []; // Variable global para guardar y filtrar
 
-// CARGAR
+window.onload = () => {
+  cargar();
+
+  // Escuchamos el buscador en tiempo real
+  const inputFiltro = document.getElementById("filtroEscuelas");
+  if (inputFiltro) {
+    inputFiltro.addEventListener("input", filtrarEscuelas);
+  }
+};
+
+// ================= CARGAR =================
 async function cargar() {
   const tabla = document.querySelector("#tablaEscuelas tbody");
   if (!tabla) return;
@@ -9,40 +19,73 @@ async function cargar() {
   try {
     const res = await fetch(API);
     const data = await res.json();
-    tabla.innerHTML = "";
 
-    if (data.length === 0) {
-      tabla.innerHTML = `<tr><td colspan="6">No hay escuelas registradas</td></tr>`;
-      return;
-    }
+    // Guardamos los datos recibidos en la variable global
+    escuelasOriginales = data;
 
-    data.forEach((e) => {
-      const contactoTexto = e.contacto ? e.contacto : "N/A";
-
-      tabla.innerHTML += `
-            <tr>
-                <td>${e.id_escuela}</td>
-                <td class="font-weight-bold">${e.nombre_escuela}</td>
-                <td>${contactoTexto}</td>
-                <td>${e.direccion}</td>
-                <td>${e.telefono}</td>
-                <td>
-                    <button class="btn btn-info btn-sm"
-                        onclick="editar(${e.id_escuela}, '${e.nombre_escuela}', '${e.contacto || ""}', '${e.direccion}', '${e.telefono}')">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-danger btn-sm" onclick="eliminar(${e.id_escuela})">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            </tr>`;
-    });
+    // Pintamos todos los datos al iniciar
+    renderizarTabla(escuelasOriginales);
   } catch (error) {
     console.error("Error cargando:", error);
   }
 }
 
-// GUARDAR / ACTUALIZAR
+// ================= DIBUJAR TABLA =================
+function renderizarTabla(data) {
+  const tabla = document.querySelector("#tablaEscuelas tbody");
+  tabla.innerHTML = "";
+
+  if (data.length === 0) {
+    tabla.innerHTML = `<tr><td colspan="6" class="text-muted py-3">No se encontraron escuelas...</td></tr>`;
+    return;
+  }
+
+  data.forEach((e) => {
+    const contactoTexto = e.contacto ? e.contacto : "N/A";
+    // Protegemos las variables para evitar que 'null' rompa el botón de editar
+    const dirTexto = e.direccion || "";
+    const telTexto = e.telefono || "";
+
+    tabla.innerHTML += `
+        <tr>
+            <td>${e.id_escuela}</td>
+            <td class="font-weight-bold">${e.nombre_escuela}</td>
+            <td>${contactoTexto}</td>
+            <td>${dirTexto}</td>
+            <td>${telTexto}</td>
+            <td>
+                <button class="btn btn-info btn-sm"
+                    onclick="editar(${e.id_escuela}, '${e.nombre_escuela}', '${e.contacto || ""}', '${dirTexto}', '${telTexto}')">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-danger btn-sm" onclick="eliminar(${e.id_escuela})">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>`;
+  });
+}
+
+// ================= FILTRAR =================
+function filtrarEscuelas() {
+  const texto = document.getElementById("filtroEscuelas").value.toLowerCase();
+
+  const filtradas = escuelasOriginales.filter((e) => {
+    const nombre = (e.nombre_escuela || "").toLowerCase();
+    const contacto = (e.contacto || "").toLowerCase();
+    const direccion = (e.direccion || "").toLowerCase();
+
+    return (
+      nombre.includes(texto) ||
+      contacto.includes(texto) ||
+      direccion.includes(texto)
+    );
+  });
+
+  renderizarTabla(filtradas);
+}
+
+// ================= GUARDAR / ACTUALIZAR =================
 async function guardar() {
   const token = localStorage.getItem("token");
   const id = document.getElementById("id").value;
@@ -84,7 +127,7 @@ async function guardar() {
   }
 }
 
-// ELIMINAR 
+// ================= ELIMINAR =================
 async function eliminar(id) {
   if (confirm("¿Estás seguro de que deseas eliminar esta escuela?")) {
     const token = localStorage.getItem("token");
@@ -107,7 +150,7 @@ async function eliminar(id) {
   }
 }
 
-// EDITAR Y ABRIR MODAL
+// ================= EDITAR Y ABRIR MODAL =================
 function editar(id, nombre, contacto, direccion, telefono) {
   document.getElementById("id").value = id;
   document.getElementById("nombre").value = nombre;

@@ -215,11 +215,28 @@
 
             <div class="card shadow mb-4">
               <div
-                class="card-header py-3 d-flex justify-content-between align-items-center"
+                class="card-header py-3 d-flex flex-column flex-md-row justify-content-between align-items-center"
               >
-                <button class="btn btn-success" onclick="abrirModal()">
+                <button
+                  class="btn btn-success mb-2 mb-md-0"
+                  onclick="abrirModal()"
+                >
                   <i class="fas fa-plus"></i> Nueva Escuela
                 </button>
+
+                <div class="input-group" style="max-width: 350px">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"
+                      ><i class="fas fa-search"></i
+                    ></span>
+                  </div>
+                  <input
+                    type="text"
+                    id="filtroEscuelas"
+                    class="form-control"
+                    placeholder="Buscar por nombre, contacto o dir..."
+                  />
+                </div>
               </div>
 
               <div class="card-body">
