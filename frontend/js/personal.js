@@ -2,18 +2,17 @@ const API_URL = "/api/personal";
 let nombreAnteriorUsuario = ""; // Para rastrear si el usuario se edita a sí mismo
 
 window.onload = () => {
-    // 1. Configurar barra superior y permisos
+    // ================= 1. CONFIGURACIÓN DE BARRA SUPERIOR Y SESIÓN =================
     const usuario = localStorage.getItem("usuario") || "Usuario";
     const rol = (localStorage.getItem("rol") || "").toLowerCase();
 
     const nombreTop = document.getElementById("nombreUsuarioTop");
     if (nombreTop) {
-        nombreTop.textContent = usuario + " - " + rol;
+        nombreTop.textContent = `${usuario} - ${rol}`;
     }
 
-    // ================= SOLUCIÓN DE FOTOGRAFÍA =================
+    // Solución de Fotografía
     let fotoPerfil = localStorage.getItem("foto");
-
     if (!fotoPerfil || fotoPerfil === "undefined" || fotoPerfil === "null") {
         fotoPerfil = "/img/responsables/sinFoto.jpg";
     }
@@ -26,31 +25,27 @@ window.onload = () => {
         };
     }
 
-    // ================= SEGURIDAD Y ROLES =================
-    // Si un alumno intenta entrar aquí, lo expulsamos
-    if (rol === "participante") {
+    // ================= 2. SEGURIDAD Y ROLES =================
+    // Expulsar si no tiene permisos administrativos
+    if (rol === "participante" || rol === "promotor") {
         window.location.href = "/menu.html";
         return;
     }
 
-    // El promotor no puede gestionar personal, lo mandamos al menú
-    if (rol === "promotor") {
-        window.location.href = "/menu.html";
-        return;
-    }
-
-    // 2. Inicializar funciones
+    // ================= 3. INICIALIZAR FUNCIONES =================
     cargarPersonal();
 
     // Buscador en tiempo real
     const inputBuscador = document.getElementById("buscador");
     if (inputBuscador) {
         inputBuscador.addEventListener("input", function() {
-            let value = this.value.toLowerCase();
-            let items = document.querySelectorAll(".empleado-item");
+            const value = this.value.toLowerCase();
+            const items = document.querySelectorAll(".empleado-item");
+            
             items.forEach(item => {
-                let nombre = item.getAttribute("data-nombre") || "";
-                let rolItem = item.getAttribute("data-rol") || "";
+                const nombre = item.getAttribute("data-nombre") || "";
+                const rolItem = item.getAttribute("data-rol") || "";
+                
                 if (nombre.includes(value) || rolItem.includes(value)) {
                     item.style.display = "";
                 } else {
@@ -59,6 +54,37 @@ window.onload = () => {
             });
         });
     }
+    // Función para cargar los datos de sesión en la barra superior
+function cargarSesionTopBar() {
+    const nombre = localStorage.getItem("usuario") || "Usuario";
+    const rol = localStorage.getItem("rol") || "";
+    let foto = localStorage.getItem("foto");
+
+    // Si por alguna razón no hay foto, ponemos la de por defecto
+    if (!foto || foto === "undefined" || foto === "null") {
+        foto = "/img/responsables/sinFoto.jpg";
+    }
+
+    // 1. Pintamos el nombre y rol
+    const textNombreTop = document.getElementById("nombreUsuarioTop");
+    if (textNombreTop) {
+        textNombreTop.textContent = `${nombre} - ${rol.charAt(0).toUpperCase() + rol.slice(1)}`;
+    }
+
+    // 2. Pintamos la fotografía
+    const imgTop = document.getElementById("imgUsuarioTop");
+    if (imgTop) {
+        imgTop.src = foto;
+        
+        // Si la imagen falla en cargar (ej. se borró del servidor), ponemos la de emergencia
+        imgTop.onerror = function() {
+            this.src = "/img/responsables/sinFoto.jpg";
+        };
+    }
+}
+
+// Ejecutar apenas cargue la página
+document.addEventListener("DOMContentLoaded", cargarSesionTopBar);
 };
 
 // ================= CARGAR PERSONAL =================
@@ -87,37 +113,37 @@ async function cargarPersonal() {
 
 function renderizarPersonal(datos) {
     const contenedor = document.getElementById("contenedor-personal");
-    contenedor.innerHTML = "";
+    let htmlContent = ""; 
 
     datos.forEach(empleado => {
-        let rutaFinal = "/img/responsables/sinFoto.jpg";
+        // Gracias al Backend, aquí ya tenemos la ruta perfecta lista para usarse
+        const rutaFinal = empleado.rutaFotoFinal; 
 
-        // Limpiar el formato ["foto.jpg"] que viene de la base de datos
-        if (empleado.imagen_urls && empleado.imagen_urls !== "[]") {
-            try {
-                const imgs = JSON.parse(empleado.imagen_urls);
-                if (Array.isArray(imgs) && imgs.length > 0) {
-                    rutaFinal = `/uploads/responsables/${imgs[0]}`;
-                }
-            } catch (e) {
-                rutaFinal = `/uploads/responsables/${empleado.imagen_urls}`;
-            }
-        }
-
-        contenedor.innerHTML += `
-            <div class="col-12 mb-3 empleado-item" data-nombre="${empleado.nombre.toLowerCase()}">
+        htmlContent += `
+            <div class="col-12 mb-3 empleado-item" data-nombre="${empleado.nombre.toLowerCase()}" data-rol="${empleado.rol.toLowerCase()}">
                 <div class="card shadow-sm p-3 d-flex flex-row justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
                         <img src="${rutaFinal}" style="width:60px; height:60px; object-fit:cover; border-radius:50%;" 
                              onerror="this.src='/img/responsables/sinFoto.jpg'">
                         <div class="ml-3">
                             <h6 class="mb-0 fw-bold">${empleado.nombre}</h6>
-                            <small class="text-muted">${empleado.correo}</small>
+                            <small class="text-muted">${empleado.correo} | <strong>${empleado.rol}</strong></small>
                         </div>
                     </div>
+                    <div>
+                        <button class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#modalEditar" 
+                                onclick="prepararEditar(${empleado.id_responsable}, '${empleado.nombre}', '${empleado.correo}', '${empleado.rol}', '${rutaFinal}')">
+                            Editar
+                        </button>
+                        <button class="btn btn-sm btn-danger shadow-sm" onclick="borraRegistro(${empleado.id_responsable}, '${empleado.nombre}')">
+                            Eliminar
+                        </button>
                     </div>
+                </div>
             </div>`;
     });
+
+    contenedor.innerHTML = htmlContent;
 }
 
 // ================= CREAR EMPLEADO =================
@@ -185,16 +211,17 @@ if (formEditar) {
                 $("#modalEditar").modal("hide");
                 Swal.fire({ icon: 'success', title: 'Actualizado', text: result.message, showConfirmButton: false, timer: 2000 });
                 
-                // LÓGICA CLAVE: Si te editaste a ti mismo, actualiza la sesión
+                // Si el usuario se editó a sí mismo, actualiza la sesión visual
                 const usuarioLogueado = localStorage.getItem("usuario");
                 if (nombreAnteriorUsuario === usuarioLogueado) {
                     const nuevoNombre = document.getElementById("editNombre").value;
                     const nuevoRol = document.getElementById("editRol").value;
+                    
                     localStorage.setItem("usuario", nuevoNombre);
                     localStorage.setItem("rol", nuevoRol);
                     
                     const nombreTop = document.getElementById("nombreUsuarioTop");
-                    if(nombreTop) nombreTop.textContent = nuevoNombre + " - " + nuevoRol;
+                    if(nombreTop) nombreTop.textContent = `${nuevoNombre} - ${nuevoRol}`;
                 }
                 
                 cargarPersonal();
@@ -250,8 +277,9 @@ function borraRegistro(id, nombre) {
 
 // ================= UTILIDADES =================
 function togglePassword(id, btn) {
-    let input = document.getElementById(id);
-    let icon = btn.querySelector("i");
+    const input = document.getElementById(id);
+    const icon = btn.querySelector("i");
+    
     if (input.type === "password") {
         input.type = "text";
         icon.classList.replace("fa-eye", "fa-eye-slash");

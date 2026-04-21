@@ -10,12 +10,12 @@ const app = express();
 const PORT = 3000;
 const JWT_SECRET = "integraGames-clave-secreta"; // Clave para los tokens
 
-// ================= MIDDLEWARES =================
+// ================= MIDDLEWARES GLOBALES =================
 app.use(cors());
 app.use(express.json()); // Permite recibir JSON
 app.use(express.urlencoded({ extended: true }));
 
-// Archivos estáticos
+// ================= ARCHIVOS ESTÁTICOS =================
 app.use(express.static(path.join(__dirname, "frontend")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Para las fotos subidas
 
@@ -68,41 +68,48 @@ app.post("/api/login", (req, res) => {
         .json({ error: "Rol no autorizado para ingresar al panel." });
     }
 
-    // --- LÓGICA DE FOTOGRAFÍA (Manejo de JSON array 'imagen_urls') ---
+    // --- LÓGICA DE FOTOGRAFÍA (A PRUEBA DE FALLOS) ---
     let nombreArchivo = null;
     if (u.imagen_urls && u.imagen_urls !== "[]" && u.imagen_urls !== "NULL") {
       try {
-        // Intentamos parsear por si es un arreglo ["foto.jpg"]
         const parsedImages = JSON.parse(u.imagen_urls);
         if (Array.isArray(parsedImages) && parsedImages.length > 0) {
           nombreArchivo = parsedImages[0];
         }
       } catch (e) {
-        // Si no es JSON, lo tomamos como texto plano
         nombreArchivo = u.imagen_urls;
       }
     }
 
     let fotoUsuario = "/img/responsables/sinFoto.jpg"; // Fallback por defecto
     if (nombreArchivo) {
-      fotoUsuario = nombreArchivo.startsWith("/")
-        ? nombreArchivo
-        : `/uploads/responsables/${nombreArchivo}`;
+      // Limpiamos espacios en blanco accidentales (como "ale.jpg ")
+      const archivoLimpio =
+        typeof nombreArchivo === "string"
+          ? nombreArchivo.trim()
+          : nombreArchivo;
+      fotoUsuario = archivoLimpio.startsWith("/")
+        ? archivoLimpio
+        : `/uploads/responsables/${archivoLimpio}`;
     }
 
-    // Crear Token
+    // Crear Token incluyendo la foto
     const token = jwt.sign(
-      { id: u.id_responsable, usuario: u.nombre, rol: u.rol },
+      {
+        id: u.id_responsable,
+        usuario: u.nombre,
+        rol: u.rol,
+        foto: fotoUsuario,
+      },
       JWT_SECRET,
       { expiresIn: "2h" },
     );
 
     res.json({ token, usuario: u.nombre, rol: u.rol, foto: fotoUsuario });
-    
   });
 });
 
-// ================= RUTAS PÚBLICAS (Alumnos) =================
+// ================= RUTAS PÚBLICAS (ALUMNOS) =================
 
 // Obtener eventos del DÍA ACTUAL usando API Externa
 app.get("/api/eventos_publicos", async (req, res) => {
@@ -164,12 +171,15 @@ app.post("/api/guardar_alumno", (req, res) => {
   );
 });
 
-// ================= RUTAS DE LA API (CRUDs y Perfil) =================
+// ================= RUTAS DE LA API (CRUDs, Perfil y Juegos) =================
 
-// Rutas con acceso público o combobox
+// Rutas Públicas de la API
 app.use("/api/escuelas", require("./routes/cruds/escuelas"));
+app.use("/api/juegos/codeRun", require("./routes/juegos/codeRun"));
+app.use("/api/juegos/error404", require("./routes/juegos/error404"));
+app.use("/api/juegos/desafioTech", require("./routes/juegos/desafioTech"));
 
-// Rutas Protegidas por JWT
+// Rutas Protegidas por JWT (Solo usuarios logueados)
 app.use("/api/menu", auth, require("./routes/menu"));
 app.use("/api/perfil", auth, require("./routes/perfil"));
 app.use("/api/personal", auth, require("./routes/cruds/personal"));
@@ -180,11 +190,6 @@ app.use(
   require("./routes/cruds/encargadoEvento"),
 );
 app.use("/api/historial-participantes", auth, require("./routes/cruds/lista"));
-
-// Juegos y Encuestas
-app.use("/api/juegos/codeRun", require("./routes/juegos/codeRun"));
-app.use("/api/juegos/error404", require("./routes/juegos/error404"));
-app.use("/api/juegos/desafioTech", require("./routes/juegos/desafioTech"));
 app.use(
   "/api/guardar_encuesta",
   auth,
@@ -203,5 +208,5 @@ app.use("/", require("./routes/index"));
 
 // ================= INICIAR SERVIDOR =================
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor de IntegraGames corriendo en http://localhost:${PORT}`);
 });

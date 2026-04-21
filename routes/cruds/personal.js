@@ -1,13 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const connection = require("../../db"); // Tu conexión a la base de datos
+const connection = require("../../db"); // Ajusta los ../ según la profundidad de tu carpeta
 const multer = require("multer");
-const fs = require("fs");
 
-// ================= CONFIGURAR MULTER =================
+// ================= MULTER (Misma lógica que perfil.js) =================
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Usamos la nueva carpeta uploads
     cb(null, "./uploads/responsables/");
   },
   filename: (req, file, cb) => {
@@ -16,124 +14,92 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// ================= API: OBTENER TODOS =================
+// ================= API: OBTENER TODOS LOS EMPLEADOS =================
 router.get("/", (req, res) => {
   const sql = "SELECT * FROM responsable";
 
-  connection.query(sql, (err, result) => {
-    if (err) {
-      console.error("Error BD:", err);
-      return res
-        .status(500)
-        .json({ success: false, error: "Error en el servidor" });
-    }
+  connection.query(sql, (err, results) => {
+    if (err) return res.status(500).json({ success: false, error: "Error en servidor" });
 
-    // Procesamos las imágenes de JSON a texto normal para el frontend
-    const personalProcesado = result.map((row) => {
-      let imagenPerfil = "/img/responsables/sinFoto.jpg";
+    // Aplicamos la MISMA lógica de extracción que en perfil.js para cada usuario
+    const personalProcesado = results.map(user => {
+      let nombreArchivo = null;
 
-      if (row.imagen_urls) {
+      if (user.imagen_urls && user.imagen_urls !== "[]" && user.imagen_urls !== "NULL") {
         try {
-          const imagenes = JSON.parse(row.imagen_urls);
-          if (imagenes.length > 0) {
-            imagenPerfil = "/uploads/responsables/" + imagenes[0];
+          const imagenes = JSON.parse(user.imagen_urls);
+          if (Array.isArray(imagenes) && imagenes.length > 0) {
+            nombreArchivo = imagenes[0];
           }
         } catch (e) {
-          console.error("Error leyendo JSON");
+          nombreArchivo = user.imagen_urls;
         }
       }
 
-      return {
-        id_responsable: row.id_responsable,
-        nombre: row.nombre,
-        correo: row.correo,
-        contrasena: row.contraseña,
-        rol: row.rol,
-        imagen: imagenPerfil,
-      };
+      // Generamos la ruta completa desde el backend
+      const rutaFoto = nombreArchivo 
+        ? "/uploads/responsables/" + nombreArchivo.trim() 
+        : "/img/responsables/sinFoto.jpg";
+
+      // Retornamos el usuario con un nuevo campo llamado "rutaFotoFinal"
+      return { ...user, rutaFotoFinal: rutaFoto };
     });
 
     res.json({ success: true, data: personalProcesado });
   });
 });
 
-// ================= API: CREAR =================
+// ================= API: CREAR EMPLEADO =================
 router.post("/crear", upload.single("imagen"), (req, res) => {
   const { nombre, correo, contrasena, rol } = req.body;
+  
+  let imagenesJson = null;
+  if (req.file) {
+    // Guardamos como arreglo JSON para mantener consistencia
+    imagenesJson = JSON.stringify([req.file.filename]);
+  }
 
-  let imagenesArray = req.file ? [req.file.filename] : [];
-  let fotosJSON = JSON.stringify(imagenesArray);
-
-  const sql = `INSERT INTO responsable (nombre, correo, contraseña, rol, imagen_urls) VALUES (?, ?, ?, ?, ?)`;
-
-  connection.query(sql, [nombre, correo, contrasena, rol, fotosJSON], (err) => {
-    if (err)
-      return res
-        .status(500)
-        .json({ success: false, error: "Error al crear empleado" });
-    res.json({ success: true, message: "Empleado creado exitosamente" });
+  const sql = "INSERT INTO responsable (nombre, correo, contraseña, rol, imagen_urls) VALUES (?, ?, ?, ?, ?)";
+  connection.query(sql, [nombre, correo, contrasena, rol, imagenesJson], (err, result) => {
+    if (err) return res.status(500).json({ success: false, error: "Error al crear" });
+    res.json({ success: true, message: "Empleado registrado correctamente" });
   });
 });
 
-// ================= API: EDITAR =================
+// ================= API: EDITAR EMPLEADO =================
 router.post("/editar", upload.single("imagen"), (req, res) => {
-  const { id, nombre, correo, contrasena, rol } = req.body;
+  const { id, nombre, correo, contrasena, rol } = req.body; // Asegúrate de mandar el 'id' en el FormData
 
-  // Primero buscamos la imagen actual
-  connection.query(
-    "SELECT imagen_urls FROM responsable WHERE id_responsable = ?",
-    [id],
-    (err, result) => {
-      if (err)
-        return res.status(500).json({ success: false, error: "Error en BD" });
+  const sqlBuscar = "SELECT * FROM responsable WHERE id_responsable = ?";
+  connection.query(sqlBuscar, [id], (err, result) => {
+    if (err || result.length === 0) return res.status(404).json({ success: false, error: "Usuario no encontrado" });
 
-      let imagenesArray = [];
-      if (result.length > 0 && result[0].imagen_urls) {
-        imagenesArray = JSON.parse(result[0].imagen_urls);
-      }
+    const currentUser = result[0];
+    const nuevoNombre = nombre || currentUser.nombre;
+    const nuevoCorreo = correo || currentUser.correo;
+    const nuevaContrasena = contrasena || currentUser.contraseña;
+    const nuevoRol = rol || currentUser.rol;
 
-      // Si subieron una foto nueva, la reemplazamos
-      if (req.file) {
-        imagenesArray = [req.file.filename];
-      }
+    let imagenesJson = currentUser.imagen_urls;
+    if (req.file) {
+      imagenesJson = JSON.stringify([req.file.filename]);
+    }
 
-      let fotosJSON = JSON.stringify(imagenesArray);
-
-      const sqlUpdate = `
-            UPDATE responsable SET nombre = ?, correo = ?, contraseña = ?, rol = ?, imagen_urls = ?
-            WHERE id_responsable = ?
-        `;
-
-      connection.query(
-        sqlUpdate,
-        [nombre, correo, contrasena, rol, fotosJSON, id],
-        (err2) => {
-          if (err2)
-            return res
-              .status(500)
-              .json({ success: false, error: "Error al actualizar" });
-          res.json({ success: true, message: "Empleado actualizado" });
-        },
-      );
-    },
-  );
+    const sqlUpdate = "UPDATE responsable SET nombre=?, correo=?, contraseña=?, rol=?, imagen_urls=? WHERE id_responsable=?";
+    connection.query(sqlUpdate, [nuevoNombre, nuevoCorreo, nuevaContrasena, nuevoRol, imagenesJson, id], (err2) => {
+      if (err2) return res.status(500).json({ success: false, error: "Error al actualizar" });
+      res.json({ success: true, message: "Empleado actualizado" });
+    });
+  });
 });
 
-// ================= API: ELIMINAR =================
+// ================= API: ELIMINAR EMPLEADO =================
 router.delete("/eliminar/:id", (req, res) => {
-  const id = req.params.id;
-
-  connection.query(
-    "DELETE FROM responsable WHERE id_responsable = ?",
-    [id],
-    (err) => {
-      if (err)
-        return res
-          .status(500)
-          .json({ success: false, error: "Error al eliminar" });
-      res.json({ success: true, message: "Empleado eliminado" });
-    },
-  );
+  const sql = "DELETE FROM responsable WHERE id_responsable = ?";
+  connection.query(sql, [req.params.id], (err, result) => {
+    if (err) return res.status(500).json({ success: false, error: "Error al eliminar" });
+    res.json({ success: true, message: "Empleado eliminado" });
+  });
 });
 
 module.exports = router;
