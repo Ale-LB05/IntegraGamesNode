@@ -7,41 +7,75 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <title>Desafío Tech | IntegraGames</title>
-    <link rel="icon" href="/img/logo.png" />
+    <link rel="icon" href="/img/logo.png" type="image/png" />
     <link href="/css/styles.css" rel="stylesheet" />
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" />
     <link href="/css/sb-admin-2.min.css" rel="stylesheet" />
+
     <style>
+      body {
+        background: #eef4ff;
+      }
+      .rounded-4 {
+        border-radius: 1.5rem !important;
+      }
+      .rounded-3 {
+        border-radius: 1rem !important;
+      }
+      .card {
+        transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        border: none !important;
+        background: #ffffff;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+      }
+      .carousel-inner {
+        border-radius: 1rem;
+        background-color: #1a1c23;
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+      }
+      .carousel-item {
+        height: 400px;
+      }
+      .carousel-item img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+        padding: 10px;
+      }
+      .carousel-indicators li {
+        background-color: #4e73df;
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        margin: 0 5px;
+      }
+      .game-title {
+        color: #2e384d;
+        font-weight: 800;
+        font-size: 2.5rem;
+        letter-spacing: -0.5px;
+      }
+      .btn-play {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        border: none;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .btn-play:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(78, 115, 223, 0.4);
+        color: white;
+      }
       .sidebar-brand {
         font-size: 20px;
         font-weight: bold;
         letter-spacing: 1px;
       }
-      .sidebar-heading {
-        font-size: 12px;
-        letter-spacing: 1px;
-        opacity: 0.7;
-      }
-      .foto-juego-container {
-        width: 100%;
-        height: 400px;
-        background-color: #f8f9fc;
-        border-radius: 10px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        border: 1px solid #e3e6f0;
-      }
-      .foto-juego-container img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-      }
     </style>
   </head>
 
-  <body id="page-top" class="sidebar-toggled">
+  <body id="page-top">
     <div id="wrapper">
       <ul
         class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
@@ -54,39 +88,42 @@
           <div class="sidebar-brand-icon"><i class="fas fa-gamepad"></i></div>
           <div class="sidebar-brand-text mx-2">IntegraGames</div>
         </a>
+
         <hr class="sidebar-divider my-0" />
+
         <li class="nav-item active">
           <a class="nav-link" href="/menu.html"
-            ><i class="fas fa-home"></i> <span>Inicio</span></a
+            ><i class="fas fa-fw fa-home"></i> <span>Inicio</span></a
           >
         </li>
-        <hr class="sidebar-divider" />
-        <div class="sidebar-heading">Administración</div>
-        <li class="nav-item" id="menuPersonal">
-          <a class="nav-link" href="/personal.html">
-            <i class="fas fa-user"></i> <span>Personal</span>
-          </a>
+
+        <hr class="sidebar-divider item-admin" />
+        <div class="sidebar-heading item-admin">Administración</div>
+
+        <li class="nav-item item-admin" id="menuPersonal">
+          <a class="nav-link" href="/personal.html"
+            ><i class="fas fa-fw fa-user"></i> <span>Personal</span></a
+          >
+        </li>
+        <li class="nav-item item-admin">
+          <a class="nav-link" href="/eventos.html"
+            ><i class="fas fa-fw fa-calendar-alt"></i> <span>Eventos</span></a
+          >
+        </li>
+        <li class="nav-item item-admin" id="menuEscuelas">
+          <a class="nav-link" href="/escuelas.html"
+            ><i class="fas fa-fw fa-school"></i> <span>Escuelas</span></a
+          >
         </li>
 
-        <li class="nav-item active">
-          <a class="nav-link" href="/eventos.html">
-            <i class="fas fa-calendar-alt"></i> <span>Eventos</span>
-          </a>
-        </li>
-
-        <li class="nav-item" id="menuEscuelas">
-          <a class="nav-link" href="/escuelas.html">
-            <i class="fas fa-school"></i> <span>Escuelas</span>
-          </a>
-        </li>
-        <li class="nav-item">
+        <li class="nav-item item-admin">
           <a
             class="nav-link collapsed"
             href="#"
             data-toggle="collapse"
             data-target="#collapseUsuarios"
           >
-            <i class="fas fa-users"></i> <span>Historial</span>
+            <i class="fas fa-fw fa-users"></i> <span>Historial</span>
           </a>
           <div id="collapseUsuarios" class="collapse">
             <div class="bg-white py-2 collapse-inner rounded">
@@ -100,34 +137,42 @@
             </div>
           </div>
         </li>
+
         <hr class="sidebar-divider" />
         <div class="sidebar-heading">Información</div>
         <li class="nav-item">
-          <a class="nav-link" href="https://share.google/2xNdfPbTZ1n7FfE9E"
-            ><i class="fas fa-university"></i> <span>UTM</span></a
+          <a class="nav-link" href="https://ut-morelia.edu.mx" target="_blank"
+            ><i class="fas fa-fw fa-university"></i> <span>UTM</span></a
           >
         </li>
+
         <hr class="sidebar-divider" />
         <div class="sidebar-heading">Contacto</div>
         <li class="nav-item">
-          <a class="nav-link" href="https://www.facebook.com/share/1CTdx2LSvG/"
-            ><i class="fab fa-facebook"></i> <span>Facebook</span></a
+          <a
+            class="nav-link"
+            href="https://www.facebook.com/share/1JrTM7N5jB/"
+            target="_blank"
+            ><i class="fab fa-fw fa-facebook"></i> <span>Facebook</span></a
           >
         </li>
         <li class="nav-item">
           <a
             class="nav-link"
-            href="https://www.instagram.com/utmmorelia?igsh=NzBsNHV1YTRyeTZk"
-            ><i class="fab fa-instagram"></i> <span>Instagram</span></a
+            href="https://www.instagram.com/utmmorelia?igsh=NzBsNHVlYTRyeTZk"
+            target="_blank"
+            ><i class="fab fa-fw fa-instagram"></i> <span>Instagram</span></a
           >
         </li>
         <li class="nav-item">
           <a
             class="nav-link"
             href="https://www.tiktok.com/@utmorelia?_r=1&_t=ZS-94h24oJcmpk"
-            ><i class="fab fa-tiktok"></i> <span>TikTok</span></a
+            target="_blank"
+            ><i class="fab fa-fw fa-tiktok"></i> <span>TikTok</span></a
           >
         </li>
+
         <hr class="sidebar-divider" />
         <div class="sidebar-heading">Sesión</div>
         <li class="nav-item">
@@ -136,9 +181,11 @@
             href="#"
             data-toggle="modal"
             data-target="#logoutModal"
-            ><i class="fas fa-sign-out-alt"></i> <span>Salir</span></a
           >
+            <i class="fas fa-fw fa-sign-out-alt"></i> <span>Salir</span>
+          </a>
         </li>
+
         <hr class="sidebar-divider d-none d-md-block" />
         <div class="text-center d-none d-md-inline">
           <button class="rounded-circle border-0" id="sidebarToggle"></button>
@@ -156,7 +203,6 @@
             >
               <i class="fa fa-bars"></i>
             </button>
-            <img src="/img/logo.png" style="height: 70px" />
             <ul class="navbar-nav ml-auto">
               <li class="nav-item dropdown no-arrow">
                 <a
@@ -180,70 +226,145 @@
                 <div
                   class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                 >
-                  <a class="dropdown-item" href="/perfil.html"
-                    ><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Perfil</a
-                  >
+                  <a class="dropdown-item" href="/perfil.html">
+                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Perfil
+                  </a>
                   <div class="dropdown-divider"></div>
                   <a
                     class="dropdown-item"
                     href="#"
                     data-toggle="modal"
                     data-target="#logoutModal"
-                    ><i
+                  >
+                    <i
                       class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"
                     ></i>
-                    Cerrar sesión</a
-                  >
+                    Cerrar sesión
+                  </a>
                 </div>
               </li>
             </ul>
           </nav>
 
-          <div class="container-fluid mt-4">
+          <div class="container-fluid mb-5">
+            <div class="mb-4">
+              <a
+                href="/menu.html"
+                class="btn btn-light border shadow-sm rounded-pill text-muted fw-bold px-4"
+              >
+                <i class="fas fa-arrow-left mr-2"></i> Volver a Juegos
+              </a>
+            </div>
+
             <div class="row justify-content-center">
-              <div class="col-lg-10">
-                <div class="card shadow p-4 mb-5" style="border-radius: 15px">
-                  <h2
-                    class="mb-4 text-primary font-weight-bold text-center"
-                    id="tituloJuego"
-                  >
-                    Cargando...
-                  </h2>
+              <div class="col-xl-10 col-lg-11">
+                <div class="card p-4 p-md-5 rounded-4">
+                  <div class="row align-items-center">
+                    <div class="col-lg-7 mb-4 mb-lg-0">
+                      <div
+                        id="carouselJuego"
+                        class="carousel slide shadow-sm rounded-3"
+                        data-ride="carousel"
+                      >
+                        <ol
+                          class="carousel-indicators mb-2"
+                          id="carruselIndicadores"
+                        ></ol>
+                        <div class="carousel-inner" id="carruselImagenes"></div>
+                        <a
+                          class="carousel-control-prev"
+                          href="#carouselJuego"
+                          role="button"
+                          data-slide="prev"
+                        >
+                          <span
+                            class="carousel-control-prev-icon"
+                            aria-hidden="true"
+                          ></span>
+                          <span class="sr-only">Anterior</span>
+                        </a>
+                        <a
+                          class="carousel-control-next"
+                          href="#carouselJuego"
+                          role="button"
+                          data-slide="next"
+                        >
+                          <span
+                            class="carousel-control-next-icon"
+                            aria-hidden="true"
+                          ></span>
+                          <span class="sr-only">Siguiente</span>
+                        </a>
+                      </div>
+                    </div>
 
-                  <div class="mb-4 shadow-sm foto-juego-container">
-                    <img
-                      id="imagenJuego"
-                      src=""
-                      alt="Portada del Juego Desafío Tech"
-                    />
-                  </div>
-
-                  <div
-                    class="mb-4 text-justify text-dark"
-                    id="descripcionJuego"
-                    style="font-size: 1.1rem; line-height: 1.6"
-                  ></div>
-
-                  <div class="text-center mt-4">
-                    <a
-                      href="#"
-                      id="btnJugar"
-                      class="btn btn-primary btn-lg px-5 shadow font-weight-bold"
-                      style="border-radius: 50px"
+                    <div
+                      class="col-lg-5 pl-lg-5 d-flex flex-column justify-content-center"
                     >
-                      <i class="fas fa-play mr-2"></i> ¡Jugar Ahora!
-                    </a>
+                      <div class="mb-3">
+                        <span
+                          class="badge bg-danger text-white px-3 py-2 rounded-pill shadow-sm"
+                          ><i class="fas fa-question-circle mr-1"></i>
+                          Trivia</span
+                        >
+                        <span
+                          class="badge bg-light text-dark border px-3 py-2 rounded-pill shadow-sm"
+                          ><i class="fas fa-laptop-code mr-1"></i> TI &
+                          Aprendizaje</span
+                        >
+                      </div>
+
+                      <h1 class="game-title mb-3" id="tituloJuego">
+                        Cargando...
+                      </h1>
+
+                      <p
+                        class="text-secondary mb-4"
+                        style="
+                          font-size: 0.95rem;
+                          line-height: 1.6;
+                          text-align: justify;
+                        "
+                        id="parrafoJuego"
+                      >
+                        Cargando descripción...
+                      </p>
+
+                      <div class="mb-4" id="listaCaracteristicas"></div>
+
+                      <hr class="mb-4 border-light" />
+
+                      <div>
+                        <a
+                          href="#"
+                          id="btnJugarInfo"
+                          class="btn btn-play btn-lg rounded-pill text-white w-100 fw-bold py-3 shadow disabled"
+                        >
+                          <i class="fas fa-play-circle fa-lg mr-2"></i> Jugar
+                          Ahora
+                        </a>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <footer class="sticky-footer bg-white">
+
+        <footer
+          class="sticky-footer"
+          style="
+            background-color: #ffffff !important;
+            border-top: 1px solid #e3e6f0;
+          "
+        >
           <div class="container my-auto">
             <div class="copyright text-center my-auto">
-              <span>IntegraGames 2026</span>
+              <span style="color: #858796 !important; font-size: 0.9rem"
+                >Copyright &copy; IntegraGames 2026</span
+              >
             </div>
           </div>
         </footer>
@@ -255,7 +376,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Cerrar sesión</h5>
-            <button class="close" data-dismiss="modal">&times;</button>
+            <button class="close" data-dismiss="modal">×</button>
           </div>
           <div class="modal-body">¿Seguro que deseas salir?</div>
           <div class="modal-footer">
@@ -272,35 +393,8 @@
 
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="/js/sb-admin-2.min.js"></script>
     <script src="/js/desafioTech.js"></script>
-    <script>
-      document.getElementById("nombreUsuarioTop").textContent =
-        localStorage.getItem("usuario") + " - " + localStorage.getItem("rol");
-      function cerrarSesion() {
-        localStorage.clear();
-        window.location.href = "/registroAdmin/login.html";
-      }
-      // 1. Obtener datos del usuario
-      const usuario = localStorage.getItem("usuario");
-      const rol = (localStorage.getItem("rol") || "").toLowerCase();
-
-      // 2. Poner nombre y rol en la barra superior
-      document.getElementById("nombreUsuarioTop").textContent =
-        usuario + " - " + rol;
-
-      // 3. LÓGICA DE RESTRICCIÓN PARA PROMOTOR
-      if (rol === "promotor") {
-        // Ocultamos Personal y Escuelas
-        const itemPersonal = document.getElementById("menuPersonal");
-        const itemEscuelas = document.getElementById("menuEscuelas");
-
-        if (itemPersonal) itemPersonal.style.display = "none";
-        if (itemEscuelas) itemEscuelas.style.display = "none";
-
-        // Si quisieras ocultar toda la sección de "Administración"
-        // pero dejar los historiales, lo ideal es ocultar solo los hijos como hicimos arriba.
-      }
-    </script>
   </body>
 </html>

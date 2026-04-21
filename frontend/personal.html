@@ -1,198 +1,148 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
+<head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Personal | IntegraGames</title>
-
     <link rel="icon" href="/img/logo.png" />
     <link href="/css/styles.css" rel="stylesheet" />
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" />
     <link href="/css/sb-admin-2.min.css" rel="stylesheet" />
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-      .sidebar-brand {
-        font-size: 20px;
-        font-weight: bold;
-        letter-spacing: 1px;
-      }
-      .sidebar .nav-link i {
-        font-size: 16px;
-        margin-right: 8px;
-      }
-      .sidebar .nav-link:hover {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-      }
-      .sidebar .nav-link span {
-        font-weight: 500;
-      }
-      .sidebar-divider {
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
-      }
-      .sidebar-heading {
-        font-size: 12px;
-        letter-spacing: 1px;
-        opacity: 0.7;
-      }
+        body { background: #eef4ff; }
+        .text-primary { color: #4e73df !important; }
+        .text-secondary { color: #858796 !important; }
+        .bg-primary { background-color: #3b82f6 !important; }
+        .rounded-4 { border-radius: 1rem !important; }
+        .rounded-top-4 {
+            border-top-left-radius: 1rem !important;
+            border-top-right-radius: 1rem !important;
+        }
+        .fw-bold { font-weight: bold; }
+        .perfil-img-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #3b82f6;
+        }
+        .card {
+            transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+            transform: none !important;
+            border: none !important;
+            background: #ffffff;
+            border-radius: 20px !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+        }
+        .card:hover {
+            transform: none !important;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12) !important;
+        }
+        .sidebar-brand {
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
     </style>
-  </head>
+</head>
 
-  <body id="page-top" class="sidebar-toggled">
+<body id="page-top">
     <div id="wrapper">
-      <ul
-        class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
-        id="accordionSidebar"
-      >
-        <a
-          class="sidebar-brand d-flex align-items-center justify-content-center"
-          href="/menu.html"
-        >
-          <div class="sidebar-brand-icon">
-            <i class="fas fa-gamepad"></i>
-          </div>
-          <div class="sidebar-brand-text mx-2">IntegraGames</div>
-        </a>
+        
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/menu.html">
+                <div class="sidebar-brand-icon"><i class="fas fa-gamepad"></i></div>
+                <div class="sidebar-brand-text mx-2">IntegraGames</div>
+            </a>
 
-        <hr class="sidebar-divider my-0" />
+            <hr class="sidebar-divider my-0" />
 
-        <li class="nav-item">
-          <a class="nav-link" href="/menu.html">
-            <i class="fas fa-home"></i> <span>Inicio</span>
-          </a>
-        </li>
-
-        <hr class="sidebar-divider" />
-        <div class="sidebar-heading">Administración</div>
-
-        <li class="nav-item active">
-          <a class="nav-link" href="/personal.html">
-            <i class="fas fa-user"></i> <span>Personal</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/eventos.html">
-            <i class="fas fa-calendar-alt"></i> <span>Eventos</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/escuelas.html">
-            <i class="fas fa-school"></i> <span>Escuelas</span>
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed"
-            href="#"
-            data-toggle="collapse"
-            data-target="#collapseUsuarios"
-          >
-            <i class="fas fa-users"></i> <span>Historial</span>
-          </a>
-          <div id="collapseUsuarios" class="collapse">
-            <div class="bg-white py-2 collapse-inner rounded">
-              <h6 class="collapse-header">Historial:</h6>
-              <a class="collapse-item" href="/encargadoEvento.html"
-                ><i class="fas fa-user-tie"></i> Eventos</a
-              >
-              <a class="collapse-item" href="/lista.html"
-                ><i class="fas fa-users"></i> Participantes</a
-              >
-            </div>
-          </div>
-        </li>
-
-        <hr class="sidebar-divider" />
-        <div class="sidebar-heading">Información</div>
-        <li class="nav-item">
-          <a class="nav-link" href="https://share.google/2xNdfPbTZ1n7FfE9E"
-            ><i class="fas fa-university"></i> <span>UTM</span></a
-          >
-        </li>
-
-        <hr class="sidebar-divider" />
-        <div class="sidebar-heading">Contacto</div>
-        <li class="nav-item">
-          <a class="nav-link" href="https://www.facebook.com/share/1CTdx2LSvG/"
-            ><i class="fab fa-facebook"></i> <span>Facebook</span></a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            href="https://www.instagram.com/utmmorelia?igsh=NzBsNHV1YTRyeTZk"
-            ><i class="fab fa-instagram"></i> <span>Instagram</span></a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            href="https://www.tiktok.com/@utmorelia?_r=1&_t=ZS-94h24oJcmpk"
-            ><i class="fab fa-tiktok"></i> <span>TikTok</span></a
-          >
-        </li>
-
-        <hr class="sidebar-divider" />
-        <div class="sidebar-heading">Sesión</div>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            href="#"
-            data-toggle="modal"
-            data-target="#logoutModal"
-          >
-            <i class="fas fa-sign-out-alt"></i> <span>Salir</span>
-          </a>
-        </li>
-
-        <hr class="sidebar-divider d-none d-md-block" />
-        <div class="text-center d-none d-md-inline">
-          <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
-      </ul>
-      <div id="content-wrapper" class="d-flex flex-column">
-        <div id="content">
-          <nav
-            class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow"
-          >
-            <div class="d-flex align-items-center">
-              <button
-                id="sidebarToggleTop"
-                class="btn btn-link d-md-none rounded-circle mr-2"
-              >
-                <i class="fa fa-bars"></i>
-              </button>
-              <img src="/img/logo.png" style="height: 70px" />
-            </div>
-
-            <ul class="navbar-nav ml-auto">
-              <div class="topbar-divider d-none d-sm-block"></div>
-
-              <li class="nav-item dropdown no-arrow">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="userDropdown"
-                  role="button"
-                  data-toggle="dropdown"
-                >
-                  <span
-                    class="mr-2 d-none d-lg-inline text-gray-600 small"
-                    id="nombreUsuarioTop"
-                    >Cargando...</span
-                  >
-                  <img
-                    class="img-profile rounded-circle"
-                    src="/img/user.jpg"
-                    style="object-fit: cover"
-                  />
+            <li class="nav-item">
+                <a class="nav-link" href="/menu.html">
+                    <i class="fas fa-fw fa-home"></i> <span>Inicio</span>
                 </a>
+            </li>
 
-                <div
+            <hr class="sidebar-divider item-admin" />
+            <div class="sidebar-heading item-admin">Administración</div>
+
+            <li class="nav-item active item-admin" id="menuPersonal">
+                <a class="nav-link" href="/personal.html">
+                    <i class="fas fa-fw fa-user"></i> <span>Personal</span>
+                </a>
+            </li>
+            <li class="nav-item item-admin">
+                <a class="nav-link" href="/eventos.html">
+                    <i class="fas fa-fw fa-calendar-alt"></i> <span>Eventos</span>
+                </a>
+            </li>
+            <li class="nav-item item-admin" id="menuEscuelas">
+                <a class="nav-link" href="/escuelas.html">
+                    <i class="fas fa-fw fa-school"></i> <span>Escuelas</span>
+                </a>
+            </li>
+
+            <li class="nav-item item-admin">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsuarios">
+                    <i class="fas fa-fw fa-users"></i> <span>Historial</span>
+                </a>
+                <div id="collapseUsuarios" class="collapse">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Historial:</h6>
+                        <a class="collapse-item" href="/encargadoEvento.html"><i class="fas fa-user-tie"></i> Eventos</a>
+                        <a class="collapse-item" href="/lista.html"><i class="fas fa-users"></i> Participantes</a>
+                    </div>
+                </div>
+            </li>
+
+           <hr class="sidebar-divider" />
+            <div class="sidebar-heading">Información</div>
+            <li class="nav-item">
+                <a class="nav-link" href="https://ut-morelia.edu.mx" target="_blank"><i class="fas fa-fw fa-university"></i> <span>UTM</span></a>
+            </li>
+
+            <hr class="sidebar-divider" />
+            <div class="sidebar-heading">Contacto</div>
+            <li class="nav-item">
+                <a class="nav-link" href="https://www.facebook.com/share/1JrTM7N5jB/" target="_blank"><i class="fab fa-fw fa-facebook"></i> <span>Facebook</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://www.instagram.com/utmmorelia?igsh=NzBsNHVlYTRyeTZk" target="_blank"><i class="fab fa-fw fa-instagram"></i> <span>Instagram</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://www.tiktok.com/@utmorelia?_r=1&_t=ZS-94h24oJcmpk" target="_blank"><i class="fab fa-fw fa-tiktok"></i> <span>TikTok</span></a>
+            </li>
+
+            <hr class="sidebar-divider" />
+            <div class="sidebar-heading">Sesión</div>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">
+                    <i class="fas fa-fw fa-sign-out-alt"></i> <span>Salir</span>
+                </a>
+            </li>
+
+            <hr class="sidebar-divider d-none d-md-block" />
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-2">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <img src="/img/logo.png" style="height: 70px" />
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="nombreUsuarioTop">Cargando...</span>
+                                <img class="img-profile rounded-circle" id="imgUsuarioTop" src="/img/responsables/sinFoto.jpg">
+                            </a>
+                            <div
                   class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                 >
                   <a class="dropdown-item" href="/perfil.html">
@@ -212,213 +162,208 @@
                     Cerrar sesión
                   </a>
                 </div>
-              </li>
-            </ul>
-          </nav>
-          <div class="container-fluid mt-4">
-            <h1 class="h3 mb-4 text-gray-800">Panel de personal</h1>
+                        </li>
+                    </ul>
+                </nav>
 
-            <div class="card shadow mb-4">
-              <div
-                class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center"
-              >
-                <button
-                  class="btn btn-success mb-2 mb-md-0"
-                  data-toggle="modal"
-                  data-target="#modalCrear"
-                >
-                  <i class="fas fa-plus"></i> Nuevo empleado
-                </button>
-
-                <div
-                  class="d-flex flex-column flex-sm-row gap-2"
-                  style="gap: 10px"
-                >
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"
-                        ><i class="fas fa-search"></i
-                      ></span>
+                <div class="container-fluid mt-4">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4 flex-wrap">
+                        <h1 class="h3 text-gray-800 mb-2 fw-bold">Panel de Personal</h1>
+                        <div class="d-flex align-items-center flex-wrap">
+                            <div class="input-group mr-2 mb-2" style="width: 350px">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-white border-right-0"><i class="fas fa-search text-primary"></i></span>
+                                </div>
+                                <input type="text" id="buscador" class="form-control border-left-0" placeholder="Buscar por nombre o rol..." />
+                            </div>
+                            <button class="btn btn-success mb-2 shadow-sm rounded-pill px-4 fw-bold" data-toggle="modal" data-target="#modalCrear">
+                                <i class="fas fa-user-plus mr-1"></i> Nuevo Empleado
+                            </button>
+                        </div>
                     </div>
-                    <input
-                      type="text"
-                      id="buscarNombre"
-                      class="form-control"
-                      placeholder="Buscar por nombre..."
-                    />
-                  </div>
 
-                  <select
-                    id="buscarRol"
-                    class="form-control"
-                    style="min-width: 150px"
-                  >
-                    <option value="">Todos los roles</option>
-                    <option value="administrador">Administrador</option>
-                    <option value="promotor">Promotor</option>
-                  </select>
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <div class="row" id="contenedor-personal">
+                                <p class="text-center w-100">Cargando personal...</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-
-              <div class="card-body">
-                <div class="row" id="contenedor-personal">
-                  <p class="text-center w-100">Cargando personal...</p>
-                </div>
-              </div>
             </div>
-          </div>
+
+            <footer class="sticky-footer" style="background-color: #ffffff !important; border-top: 1px solid #e3e6f0;">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span style="color: #858796 !important; font-size: 0.9rem;">
+                            Copyright &copy; IntegraGames 2026
+                        </span>
+                    </div>
+                </div>
+            </footer>
         </div>
-
-        <footer class="sticky-footer bg-white">
-          <div class="container my-auto">
-            <div class="copyright text-center my-auto">
-              <span>Copyright &copy; IntegraGames 2026</span>
-            </div>
-          </div>
-        </footer>
-      </div>
     </div>
 
-    <a class="scroll-to-top rounded" href="#page-top">
-      <i class="fas fa-angle-up"></i>
-    </a>
+    <div class="modal fade" id="modalCrear" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <form id="formCrear" enctype="multipart/form-data" class="modal-content shadow-lg border-0 rounded-4" autocomplete="off">
+                <div class="modal-header bg-primary text-white rounded-top-4">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-user-plus mr-2"></i> Nuevo Empleado</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body p-4">
+                    <h6 class="fw-bold mb-3 border-bottom pb-2" style="color: #4e73df">
+                        <i class="fas fa-address-card mr-1"></i> Información Personal
+                    </h6>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-light border-right-0" style="color: #4e73df"><i class="fas fa-user"></i></span>
+                        <input type="text" name="nombre" class="form-control border-left-0" placeholder="Nombre completo" autocomplete="off" required />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-right-0" style="color: #4e73df"><i class="fas fa-envelope"></i></span>
+                                <input type="email" name="correo" class="form-control border-left-0" placeholder="Correo electrónico" autocomplete="off" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-right-0" style="color: #4e73df"><i class="fas fa-user-tag"></i></span>
+                                <select name="rol" class="form-control border-left-0" required>
+                                    <option value="">Seleccionar rol...</option>
+                                    <option value="administrador">Administrador</option>
+                                    <option value="promotor">Promotor</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="fw-bold mb-3 mt-2 border-bottom pb-2" style="color: #4e73df">
+                        <i class="fas fa-shield-alt mr-1"></i> Seguridad
+                    </h6>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-light border-right-0" style="color: #4e73df"><i class="fas fa-lock"></i></span>
+                        <input type="password" name="contrasena" id="passCrear" class="form-control border-left-0" placeholder="Contraseña de acceso" autocomplete="new-password" required />
+                        <button class="btn btn-outline-secondary border-left-0" type="button" onclick="togglePassword('passCrear', this)">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </div>
+                    <h6 class="fw-bold mb-3 mt-2 border-bottom pb-2" style="color: #4e73df">
+                        <i class="fas fa-camera mr-1"></i> Fotografía
+                    </h6>
+                    <div class="row align-items-center bg-light p-3 rounded-3 mx-0 border">
+                        <div class="col-md-4 text-center border-right">
+                            <p class="mb-2 small fw-bold text-uppercase" style="color: #4e73df">Vista Previa</p>
+                            <img id="previewNuevo" src="/img/responsables/sinFoto.jpg" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);" />
+                        </div>
+                        <div class="col-md-8 pl-md-4 mt-3 mt-md-0">
+                            <p class="mb-2 small fw-bold text-uppercase" style="color: #4e73df">Subir Imagen</p>
+                            <input type="file" name="imagen" class="form-control form-control-sm" accept="image/*" onchange="document.getElementById('previewNuevo').src = window.URL.createObjectURL(this.files[0])" />
+                            <small class="text-muted mt-1 d-block" style="font-size: 0.75rem">
+                                <i class="fas fa-info-circle"></i> Opcional. Se recomienda que el rostro esté centrado.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-top-0">
+                    <button type="button" class="btn btn-outline-danger rounded-pill px-4" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success text-white fw-bold rounded-pill px-4 shadow-sm">
+                        <i class="fas fa-save mr-1"></i> Guardar Empleado
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <form id="formEditar" enctype="multipart/form-data" class="modal-content shadow-lg border-0 rounded-4" autocomplete="off">
+                <div class="modal-header bg-primary text-white rounded-top-4">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-user-edit mr-2"></i> Editar Empleado</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body p-4">
+                    <input type="hidden" name="id" id="editId" />
+                    <h6 class="fw-bold mb-3 border-bottom pb-2" style="color: #4e73df">
+                        <i class="fas fa-address-card mr-1"></i> Información Personal
+                    </h6>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-light border-right-0" style="color: #4e73df"><i class="fas fa-user"></i></span>
+                        <input type="text" name="nombre" id="editNombre" class="form-control border-left-0" autocomplete="off" required />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-right-0" style="color: #4e73df"><i class="fas fa-envelope"></i></span>
+                                <input type="email" name="correo" id="editCorreo" class="form-control border-left-0" autocomplete="off" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-right-0" style="color: #4e73df"><i class="fas fa-user-tag"></i></span>
+                                <select name="rol" id="editRol" class="form-control border-left-0" required>
+                                    <option value="administrador">Administrador</option>
+                                    <option value="promotor">Promotor</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <h6 class="fw-bold mb-3 mt-2 border-bottom pb-2" style="color: #4e73df">
+                        <i class="fas fa-shield-alt mr-1"></i> Seguridad
+                    </h6>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-light border-right-0" style="color: #4e73df"><i class="fas fa-lock"></i></span>
+                        <input type="password" name="contrasena" id="editContrasena" class="form-control border-left-0" placeholder="Dejar vacío para no cambiar contraseña" autocomplete="new-password" />
+                        <button class="btn btn-outline-secondary border-left-0" type="button" onclick="togglePassword('editContrasena', this)">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </div>
+                    <h6 class="fw-bold mb-3 mt-2 border-bottom pb-2" style="color: #4e73df">
+                        <i class="fas fa-camera mr-1"></i> Fotografía
+                    </h6>
+                    <div class="row align-items-center bg-light p-3 rounded-3 mx-0 border">
+                        <div class="col-md-4 text-center border-right">
+                            <p class="mb-2 small fw-bold text-uppercase" style="color: #4e73df">Imagen Actual</p>
+                            <img id="previewEditar" src="" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);" />
+                        </div>
+                        <div class="col-md-8 pl-md-4 mt-3 mt-md-0">
+                            <p class="mb-2 small fw-bold text-uppercase" style="color: #4e73df">Cambiar Imagen</p>
+                            <input type="file" name="imagen" class="form-control form-control-sm" accept="image/*" onchange="document.getElementById('previewEditar').src = window.URL.createObjectURL(this.files[0])" />
+                            <small class="text-muted mt-1 d-block" style="font-size: 0.75rem">
+                                <i class="fas fa-info-circle"></i> Opcional. Si no subes nada, se conservará la foto actual.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-top-0">
+                    <button type="button" class="btn btn-outline-danger rounded-pill px-4" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-info text-white fw-bold rounded-pill px-4 shadow-sm">
+                        <i class="fas fa-save mr-1"></i> Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <div class="modal fade" id="logoutModal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Cerrar sesión</h5>
-            <button class="close" data-dismiss="modal">&times;</button>
-          </div>
-          <div class="modal-body">¿Seguro que deseas cerrar sesión?</div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" data-dismiss="modal">
-              Cancelar
-            </button>
-            <button class="btn btn-primary" onclick="cerrarSesion()">
-              Cerrar sesión
-            </button>
-          </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cerrar sesión</h5>
+                    <button class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">¿Seguro que deseas cerrar sesión?</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary" onclick="cerrarSesion()">Cerrar sesión</button>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-
-    <div class="modal fade" id="modalCrear">
-      <div class="modal-dialog">
-        <div class="modal-content p-3">
-          <form id="formCrear">
-            <input
-              type="text"
-              id="crearNombre"
-              class="form-control mb-2"
-              placeholder="Nombre"
-              required
-            />
-            <input
-              type="email"
-              id="crearCorreo"
-              class="form-control mb-2"
-              placeholder="Correo"
-              required
-            />
-            <input
-              type="text"
-              id="crearContrasena"
-              class="form-control mb-2"
-              placeholder="Contraseña"
-              required
-            />
-            <select id="crearRol" class="form-control mb-2" required>
-              <option value="">Seleccione rol</option>
-              <option value="administrador">Administrador</option>
-              <option value="promotor">Promotor</option>
-            </select>
-            <input
-              type="file"
-              id="crearImagen"
-              class="form-control mb-2"
-              accept="image/*"
-            />
-            <button type="submit" class="btn btn-success w-100">Guardar</button>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal fade" id="modalEditar">
-      <div class="modal-dialog">
-        <div class="modal-content p-3">
-          <form id="formEditar">
-            <input type="hidden" id="editId" />
-            <input
-              type="text"
-              id="editNombre"
-              class="form-control mb-2"
-              required
-            />
-            <input
-              type="email"
-              id="editCorreo"
-              class="form-control mb-2"
-              required
-            />
-            <input
-              type="text"
-              id="editContrasena"
-              class="form-control mb-2"
-              required
-            />
-            <select id="editRol" class="form-control mb-2" required>
-              <option value="administrador">Administrador</option>
-              <option value="promotor">Promotor</option>
-            </select>
-            <img id="previewImagen" width="100" class="mb-2 rounded" />
-            <input
-              type="file"
-              id="editImagen"
-              class="form-control mb-2"
-              accept="image/*"
-            />
-            <button type="submit" class="btn btn-primary w-100">
-              Guardar cambios
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal fade" id="modalEliminar">
-      <div class="modal-dialog">
-        <div class="modal-content p-3">
-          <form id="formEliminar">
-            <input type="hidden" id="deleteIdusuario" />
-            <p>
-              ¿Seguro que deseas eliminar a
-              <strong id="nombreEmpleado"></strong>?
-            </p>
-            <button type="submit" class="btn btn-danger w-100">Eliminar</button>
-          </form>
-        </div>
-      </div>
     </div>
 
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="/js/sb-admin-2.min.js"></script>
-
     <script src="/js/personal.js"></script>
-
-    <script>
-      // Cargar el nombre y rol en la barra superior
-      document.getElementById("nombreUsuarioTop").textContent =
-        localStorage.getItem("usuario") + " - " + localStorage.getItem("rol");
-
-      // Función para cerrar sesión
-      function cerrarSesion() {
-        localStorage.clear();
-        window.location.href = "/registroAdmin/login.html";
-      }
-    </script>
-  </body>
+</body>
 </html>

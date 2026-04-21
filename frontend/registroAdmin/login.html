@@ -1,92 +1,219 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login IntegraGames</title>
-    <link rel="icon" href="/img/logo.png" type="image/png" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
+    <link rel="icon" href="/img/logo.png" type="image/png">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-      body {
-        background: linear-gradient(135deg, #1e3c72, #2a5298);
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .card {
-        border-radius: 15px;
-      }
-      .btn-primary {
-        background: #00c6ff;
-        border: none;
-      }
+        body {
+            font-family: 'Poppins', sans-serif;
+            /* Fondo azul degradado de la imagen original */
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .login-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .logo-img {
+            height: 50px;
+            margin-bottom: 15px;
+        }
+
+        .brand-title {
+            color: #1e3c72;
+            font-weight: 700;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+            margin-bottom: 0;
+        }
+
+        .brand-subtitle {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        /* Estilo de los inputs con fondo gris de la imagen */
+        .input-group-text {
+            background-color: #f0f4f8;
+            border: 1px solid #e1e5eb;
+            border-right: none;
+            color: #1e3c72;
+        }
+
+        .form-control {
+            background-color: #f0f4f8;
+            border: 1px solid #e1e5eb;
+            border-left: none;
+            font-size: 0.9rem;
+            padding: 10px;
+            color: #333;
+        }
+
+        .form-control:focus {
+            background-color: #fff;
+            border-color: #00c6ff;
+            box-shadow: none;
+        }
+
+        .input-group:focus-within .input-group-text,
+        .input-group:focus-within .form-control,
+        .input-group:focus-within .btn-outline-secondary {
+            border-color: #00c6ff;
+            background-color: #fff;
+        }
+
+        .btn-toggle-pass {
+            background-color: #f0f4f8;
+            border: 1px solid #e1e5eb;
+            border-left: none;
+            color: #6c757d;
+        }
+
+        .forgot-link {
+            font-size: 0.8rem;
+            color: #1e3c72;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn-primary {
+            /* Botón azul celeste/rey de tu imagen */
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 114, 255, 0.3);
+        }
+
+        .home-link {
+            font-size: 0.85rem;
+            color: #6c757d;
+            text-decoration: none;
+        }
+
+        .home-link:hover {
+            color: #1e3c72;
+        }
+
+        .divider {
+            border-top: 1px solid #eee;
+            margin: 25px 0 15px 0;
+        }
     </style>
-  </head>
+</head>
 
-  <body>
+<body>
+
     <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-5">
-          <div class="card shadow-lg">
-            <div class="card-body p-5">
-              <div class="text-center mb-4">
-                <h3>IntegraGames</h3>
-                <p class="text-muted">Panel de encargado</p>
-              </div>
+        <div class="row justify-content-center">
+            <div class="col-auto w-100 d-flex justify-content-center">
+                
+                <div class="login-card text-center">
+                    
+                    <img src="/img/logo.png" alt="Logo IntegraGames" class="logo-img">
+                    <h2 class="brand-title">INTEGRAGAMES</h2>
+                    <p class="brand-subtitle">Panel de Encargado</p>
 
-              <form id="loginForm">
-                <div class="mb-3">
-                  <label>Correo</label>
-                  <input
-                    type="email"
-                    id="correo"
-                    name="correo"
-                    class="form-control"
-                    placeholder="Ingresa tu correo"
-                    required
-                  />
+                    <form id="loginForm" class="text-start">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Correo Electrónico</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                                <input type="email" id="correo" class="form-control" placeholder="correo@gmail.com" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label">Contraseña</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+                                <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                                <button class="btn btn-outline-secondary btn-toggle-pass" type="button" id="togglePassword">
+                                    <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="text-end mb-4">
+                            <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+                        </div>
+
+                        <button type="submit" id="btnSubmit" class="btn btn-primary w-100">
+                            <i class="fa-solid fa-right-to-bracket me-1"></i> Iniciar Sesión
+                        </button>
+                    </form>
+
+                    <div id="msg" class="mt-2 small fw-bold" style="min-height: 20px;"></div>
+
+                    <div class="divider"></div>
+
+                    <div>
+                        <a href="/" class="home-link">
+                            <i class="fa-solid fa-house me-1"></i> Volver al inicio
+                        </a>
+                    </div>
+
                 </div>
 
-                <div class="mb-3">
-                  <label>Contraseña</label>
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    class="form-control"
-                    placeholder="Ingresa tu contraseña"
-                    required
-                  />
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100">
-                  <i class="fa-solid fa-right-to-bracket"></i> Iniciar sesión
-                </button>
-              </form>
-
-              <p id="msg" class="mt-3 text-center fw-bold"></p>
-
-              <hr />
-
-              <div class="text-center">
-                <a href="/index.html">
-                  <i class="fa-solid fa-arrow-left"></i> Volver al inicio
-                </a>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
 
     <script src="login.js"></script>
-  </body>
+    
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        });
+    </script>
+</body>
 </html>

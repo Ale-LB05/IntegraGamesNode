@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const connection = require("../db");
+const connection = require("../db"); // Verifica que la ruta a db.js sea la correcta
 const multer = require("multer");
 
 // ================= MULTER =================
@@ -14,46 +14,79 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// ================= API: OBTENER PERFIL =================
+// ================= API: OBTENER PERFIL Y EVENTOS =================
 router.get("/", (req, res) => {
-  // Sacamos el ID del usuario directamente del Token de seguridad
   const idUsuario = req.user.id;
 
-  const sql =
-    "SELECT nombre, correo, contraseña, rol, imagen_urls FROM responsable WHERE id_responsable = ?";
+  const sqlUser = "SELECT nombre, correo, contraseña, rol, imagen_urls FROM responsable WHERE id_responsable = ?";
 
-  connection.query(sql, [idUsuario], (err, result) => {
-    if (err)
-      return res
-        .status(500)
-        .json({ success: false, error: "Error en servidor" });
-    if (result.length === 0)
-      return res
-        .status(404)
-        .json({ success: false, error: "Usuario no encontrado" });
+  connection.query(sqlUser, [idUsuario], (err, resultUser) => {
+    if (err) return res.status(500).json({ success: false, error: "Error en servidor" });
+    if (resultUser.length === 0) return res.status(404).json({ success: false, error: "Usuario no encontrado" });
 
-    const user = result[0];
-    let imagenPerfil = "/img/user.jpg"; // Imagen por defecto
+    const user = resultUser[0];
+    let nombreArchivo = null;
 
-    if (user.imagen_urls) {
+    // --- LÓGICA DE LIMPIEZA DE IMAGEN DEL USUARIO ---
+    if (user.imagen_urls && user.imagen_urls !== "[]" && user.imagen_urls !== "NULL") {
       try {
         const imagenes = JSON.parse(user.imagen_urls);
-        if (imagenes.length > 0)
-          imagenPerfil = "/uploads/responsables/" + imagenes[0];
+        if (Array.isArray(imagenes) && imagenes.length > 0) {
+          nombreArchivo = imagenes[0];
+        }
       } catch (e) {
-        console.error("Error al leer JSON de imagen");
+        nombreArchivo = user.imagen_urls;
       }
     }
 
-    res.json({
-      success: true,
-      data: {
-        nombre: user.nombre,
-        correo: user.correo,
-        contrasena: user.contraseña,
-        rol: user.rol,
-        imagen: imagenPerfil,
-      },
+    const imagenPerfil = nombreArchivo 
+      ? "/uploads/responsables/" + nombreArchivo 
+      : "/img/responsables/sinFoto.jpg";
+
+    // 2da Consulta: Obtener los eventos asignados a ESTE usuario
+    const sqlEventos = `
+      SELECT e.* FROM evento e
+      INNER JOIN evento_responsable er ON e.id_evento = er.id_evento
+      WHERE er.id_responsable = ?
+      ORDER BY e.fecha ASC
+    `;
+
+    connection.query(sqlEventos, [idUsuario], (err2, resultEventos) => {
+      if (err2) return res.status(500).json({ success: false, error: "Error al cargar eventos" });
+
+      // Procesamos las imágenes de los eventos
+      const eventosProcesados = resultEventos.map(ev => {
+        let imgEventoNombre = null;
+        if (ev.imagen_urls && ev.imagen_urls !== "[]") {
+          try {
+            const imgs = JSON.parse(ev.imagen_urls);
+            if (Array.isArray(imgs) && imgs.length > 0) imgEventoNombre = imgs[0];
+          } catch(e) {
+            imgEventoNombre = ev.imagen_urls;
+          }
+        }
+        
+        const imgFinal = imgEventoNombre 
+          ? "/uploads/eventos/" + imgEventoNombre 
+          : "/img/default.png";
+
+        return { ...ev, imagen: imgFinal };
+      });
+
+      // Devolvemos el usuario + sus eventos
+      res.json({
+        success: true,
+        data: {
+          usuario: {
+            nombre: user.nombre,
+            correo: user.correo,
+            contrasena: user.contraseña,
+            rol: user.rol,
+            imagen: imagenPerfil,
+          },
+          eventos_asignados: eventosProcesados
+        },
+      });
     });
   });
 });
@@ -61,49 +94,54 @@ router.get("/", (req, res) => {
 // ================= API: ACTUALIZAR PERFIL =================
 router.post("/actualizar", upload.single("imagen"), (req, res) => {
   const idUsuario = req.user.id;
-  const { nombre, correo, contrasena } = req.body; // Ahora recibimos también el correo
+  const { nombre, correo, contrasena } = req.body; 
 
-  const sqlBuscar =
-    "SELECT imagen_urls FROM responsable WHERE id_responsable = ?";
+  const sqlBuscar = "SELECT nombre, correo, contraseña, imagen_urls FROM responsable WHERE id_responsable = ?";
 
   connection.query(sqlBuscar, [idUsuario], (err, result) => {
-    if (err)
-      return res
-        .status(500)
-        .json({ success: false, error: "Error en servidor" });
+    if (err) return res.status(500).json({ success: false, error: "Error en servidor" });
+    if (result.length === 0) return res.status(404).json({ success: false, error: "Usuario no encontrado" });
+    
+    const currentUser = result[0];
 
-    let imagenesArray = [];
-    if (result[0] && result[0].imagen_urls) {
-      try {
-        imagenesArray = JSON.parse(result[0].imagen_urls);
-      } catch (e) {}
+    const nuevoNombre = nombre || currentUser.nombre;
+    const nuevoCorreo = correo || currentUser.correo;
+    const nuevaContrasena = contrasena || currentUser.contraseña;
+
+    let imagenesJson = currentUser.imagen_urls;
+    if (req.file) {
+      // Guardamos como arreglo JSON para mantener consistencia
+      imagenesJson = JSON.stringify([req.file.filename]);
     }
 
-    // Si subió nueva foto, la reemplazamos
-    if (req.file) imagenesArray = [req.file.filename];
-    const imagenesJson = JSON.stringify(imagenesArray);
-
-    // Actualizamos nombre, correo, contraseña e imagen
     const sqlUpdate = `UPDATE responsable SET nombre=?, correo=?, contraseña=?, imagen_urls=? WHERE id_responsable=?`;
 
     connection.query(
       sqlUpdate,
-      [nombre, correo, contrasena, imagenesJson, idUsuario],
+      [nuevoNombre, nuevoCorreo, nuevaContrasena, imagenesJson, idUsuario],
       (err2) => {
-        if (err2)
-          return res
-            .status(500)
-            .json({
-              success: false,
-              error: "Error al actualizar la base de datos",
-            });
+        if (err2) return res.status(500).json({ success: false, error: "Error al actualizar la base de datos" });
+
+        // Determinamos la nueva ruta para enviarla al frontend
+        let nombreArchivoNuevo = null;
+        try {
+          const parsed = JSON.parse(imagenesJson);
+          if (Array.isArray(parsed) && parsed.length > 0) nombreArchivoNuevo = parsed[0];
+        } catch(e) {
+          nombreArchivoNuevo = imagenesJson;
+        }
+
+        const nuevaRutaImagen = nombreArchivoNuevo 
+          ? "/uploads/responsables/" + nombreArchivoNuevo 
+          : "/img/responsables/sinFoto.jpg";
 
         res.json({
           success: true,
           message: "Perfil actualizado correctamente",
-          nuevoNombre: nombre,
+          nuevoNombre: nuevoNombre,
+          nuevaFoto: nuevaRutaImagen
         });
-      },
+      }
     );
   });
 });

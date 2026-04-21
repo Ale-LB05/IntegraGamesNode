@@ -1,0 +1,130 @@
+/* css/index.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    overflow-x: hidden;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 100%);
+    z-index: -1;
+}
+
+.top-logos {
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    z-index: 10;
+}
+
+.main-container {
+    text-align: center;
+    padding: 40px 20px;
+    max-width: 800px;
+    width: 100%;
+    z-index: 1;
+}
+
+.main-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #00d2ff;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px rgba(0, 210, 255, 0.6);
+}
+
+.subtitle {
+    font-size: 1.3rem;
+    color: #ddd;
+    margin-bottom: 50px;
+}
+
+.features {
+    display: flex;
+    justify-content: center; /* Centra las tarjetas */
+    align-items: stretch;    /* Hace que todas tengan el mismo alto */
+    gap: 25px;               /* Espacio entre tarjetas */
+    margin-bottom: 50px;
+    width: 100%;
+    max-width: 1100px;       /* Permite que quepan las 3 tarjetas cómodamente */
+    margin-left: auto;
+    margin-right: auto;
+    flex-wrap: nowrap;       /* Evita que se bajen si hay espacio */
+}
+
+.feature-item {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 30px 20px;
+    flex: 1;                 /* Hace que las 3 tarjetas midan lo mismo */
+    min-width: 280px;        /* Pero que no sean muy flacas */
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px); /* Efecto de cristal de la primera foto */
+}
+
+.feature-item:hover {
+    background: rgba(0, 210, 255, 0.1);
+    border-color: #00d2ff;
+    transform: translateY(-5px);
+}
+
+.btn-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+    border: none;
+    padding: 15px 40px;
+    border-radius: 50px;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn2 {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a5a);
+}
+
+.footer {
+    margin-top: 60px;
+    color: #aaa;
+}
+
+.social-links a {
+    color: #00d2ff;
+    font-size: 1.5rem;
+    margin: 0 10px;
+    text-decoration: none;
+}
+
+/* Modal Dark Theme */
+.modal-content.dark-theme {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 210, 255, 0.2);
+    color: white;
+}

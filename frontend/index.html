@@ -1,176 +1,100 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IntegraGames - Inicio</title>
-
-    <link rel="icon" href="/img/logo.png" type="image/png" />
-
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-
-    <style>
-      body {
-        font-family: "Poppins", sans-serif;
-        background: url("https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop")
-          no-repeat center center fixed;
-        background-size: cover;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative; /* Necesario para ubicar el logo de la esquina */
-      }
-
-      .overlay {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        background: linear-gradient(
-          135deg,
-          rgba(0, 0, 0, 0.9),
-          rgba(0, 0, 0, 0.7)
-        );
-        z-index: -1;
-      }
-
-      /* Estilo para el logo de la esquina superior izquierda */
-      .logo-esquina {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        max-width: 150px; /* Ajusta este valor para hacer el logo más grande o pequeño */
-        height: auto;
-        z-index: 10; /* Para que quede por encima del fondo oscuro */
-      }
-
-      .main-container {
-        text-align: center;
-        max-width: 800px;
-        z-index: 10;
-        margin-top: -30px; /* Sube un poco el contenido central */
-      }
-
-      /* Estilo para el logo central (Reemplaza al control de FontAwesome) */
-      .img-central {
-        max-width: 250px; /* Ajusta el tamaño de tu logo central aquí */
-        height: auto;
-        margin-bottom: 15px;
-      }
-
-      .main-title {
-        font-size: 3.5rem; /* Un poco más grande para destacar */
-        color: #00d2ff;
-        font-weight: 800;
-        letter-spacing: 1px;
-        margin-bottom: 10px;
-      }
-
-      .subtitle {
-        color: #ffffff;
-        font-size: 1.2rem;
-        font-weight: 300;
-        margin-bottom: 30px;
-      }
-
-      .botones-container {
-        display: flex;
-        gap: 20px;
-        justify-content: center;
-        flex-wrap: wrap; /* Para que se acomoden bien en celulares */
-      }
-
-      .btn-custom {
-        background: linear-gradient(45deg, #00d2ff, #3a7bd5);
-        border: none;
-        padding: 12px 35px;
-        border-radius: 50px;
-        color: white;
-        font-weight: 600;
-        font-size: 1.1rem;
-        transition:
-          transform 0.3s ease,
-          box-shadow 0.3s ease;
-        text-decoration: none;
-      }
-
-      .btn-custom:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3);
-        color: white;
-      }
-
-      .btn-custom-2 {
-        background: linear-gradient(45deg, #ff6b6b, #ee5a5a);
-      }
-
-      .btn-custom-2:hover {
-        box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
-      }
-
-      .footer {
-        margin-top: 50px;
-        color: rgba(255, 255, 255, 0.6);
-        font-size: 0.9rem;
-      }
-
-      .footer p {
-        margin-bottom: 5px;
-      }
-    </style>
-  </head>
-
-  <body>
+    
+    <link rel="icon" href="img/logo.png" type="image/png" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="css/index.css" />
+</head>
+<body>
     <div class="overlay"></div>
 
-    <img src="/img/logoUtm.png" alt="Logo UTM" class="logo-esquina" />
-
-    <div class="main-container">
-      <div>
-        <img
-          src="/img/logo.png"
-          alt="Icono IntegraGames"
-          class="img-central"
-        />
-
-        <h1 class="main-title">IntegraGames</h1>
-        <p class="subtitle">La integración de la carrera a través del juego</p>
-      </div>
-
-      <div class="botones-container">
-        <a href="/registroAlumnos/registro_alumno.html" class="btn-custom">
-          <i class="fa-solid fa-user-plus me-2"></i> Registrarme
-        </a>
-
-        <a href="/registroAdmin/login.html" class="btn-custom btn-custom-2">
-          <i class="fa-solid fa-right-to-bracket me-2"></i> Encargado
-        </a>
-      </div>
-
-      <div class="footer">
-        <p>&copy; <span id="year"></span> IntegraGames</p>
-        <p>Desarrollado por alumnos TI</p>
-      </div>
+    <div class="top-logos">
+        <img src="img/logoUtm.png" alt="Logo UTM" style="height: 70px" />
     </div>
 
-    <script>
-      // Pequeño script para poner el año actual en automático
-      document.getElementById("year").textContent = new Date().getFullYear();
-    </script>
-    <script src="/js/index.js"></script>
+    <div class="main-container">
+        
+        <div class="logo-container">
+            <img src="img/logo.png" style="height: 170px" alt="Logo IntegraGames" />
+            <h1 class="main-title">IntegraGames</h1>
+            <p class="subtitle">La integración de la carrera a través del juego</p>
+        </div>
+
+        <div class="features">
+            <div class="feature-item" onclick="abrirModal('eventos')">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-trophy fa-2x mb-3" style="color: #00d2ff"></i>
+                </div>
+                <div class="feature-title">Eventos</div>
+                <p class="feature-desc small">Prueba videojuegos exclusivos de TI</p>
+                <span class="badge rounded-pill bg-primary mt-2">Saber más →</span>
+            </div>
+
+            <div class="feature-item" onclick="abrirModal('comunidad')">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-users fa-2x mb-3" style="color: #00d2ff"></i>
+                </div>
+                <div class="feature-title">Comunidad</div>
+                <p class="feature-desc small">Conoce a nuestros integrantes de la carrera</p>
+                <span class="badge rounded-pill bg-primary mt-2">Saber más →</span>
+            </div>
+
+            <div class="feature-item" onclick="abrirModal('juegos')">
+                <div class="feature-icon">
+                    <i class="fa-solid fa-shield-halved fa-2x mb-3" style="color: #00d2ff"></i>
+                </div>
+                <div class="feature-title">Juegos</div>
+                <p class="feature-desc small">Descubre la tecnología detrás de ellos</p>
+                <span class="badge rounded-pill bg-primary mt-2">Saber más →</span>
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <a href="/registroAlumnos/registro_alumno.html" class="btn">
+                <i class="fa-solid fa-user-plus"></i> Registrarme
+            </a>
+            <a href="/registroAdmin/login.html" class="btn btn2">
+                <i class="fa-solid fa-right-to-bracket"></i> Encargado
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>&copy; <span id="year"></span> IntegraGames. Todos los derechos reservados.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-tiktok"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="infoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content dark-theme">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">
+                        <i id="modalIcon" class="me-2"></i>
+                        <span id="modalTitle"></span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Entendido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
+    <script src="js/index.js"></script>
+</body>
 </html>

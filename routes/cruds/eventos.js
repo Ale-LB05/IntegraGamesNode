@@ -16,11 +16,9 @@ const upload = multer({ storage });
 
 // ================= API: OBTENER TODOS =================
 router.get("/", (req, res) => {
-  // MAGIA SQL: Usamos MAX() para que si hay datos viejos duplicados, solo muestre 1.
-  // También pedimos el id_responsable para mandarlo al Modal.
   const sql = `
         SELECT 
-            e.id_evento, e.nombre_evento, e.fecha, e.hora, e.lugar, 
+            e.id_evento, e.nombre_evento, e.fecha, e.hora_inicio, e.hora_fin, e.lugar, 
             e.ubicacion, e.observaciones, e.imagen_urls,
             MAX(r.nombre) AS responsable_nombre,
             MAX(er.id_responsable) AS responsable_id
@@ -28,7 +26,7 @@ router.get("/", (req, res) => {
         LEFT JOIN evento_responsable er ON e.id_evento = er.id_evento
         LEFT JOIN responsable r ON er.id_responsable = r.id_responsable
         GROUP BY 
-            e.id_evento, e.nombre_evento, e.fecha, e.hora, e.lugar, 
+            e.id_evento, e.nombre_evento, e.fecha, e.hora_inicio, e.hora_fin, e.lugar, 
             e.ubicacion, e.observaciones, e.imagen_urls
         ORDER BY e.fecha DESC
     `;
@@ -59,13 +57,14 @@ router.get("/", (req, res) => {
         id_evento: row.id_evento,
         nombre_evento: row.nombre_evento,
         fecha: fechaLimpia,
-        hora: row.hora || "",
+        hora_inicio: row.hora_inicio || "",
+        hora_fin: row.hora_fin || "",
         lugar: row.lugar,
         ubicacion: row.ubicacion || "",
         observaciones: row.observaciones || "",
         imagen: imagenEvento,
-        responsable_nombre: row.responsable_nombre, // Mandamos el nombre solo
-        responsable_id: row.responsable_id, // Mandamos el ID para el Modal
+        responsable_nombre: row.responsable_nombre,
+        responsable_id: row.responsable_id,
       };
     });
 
@@ -75,20 +74,22 @@ router.get("/", (req, res) => {
 
 // ================= API: CREAR =================
 router.post("/crear", upload.single("imagen"), (req, res) => {
-  const { nombre_evento, fecha, hora, lugar, ubicacion, observaciones } =
+  const { nombre_evento, fecha, hora_inicio, hora_fin, lugar, ubicacion, observaciones } =
     req.body;
-  const horaFinal = hora && hora.trim() !== "" ? hora : null;
+  const horaInicioFinal = hora_inicio && hora_inicio.trim() !== "" ? hora_inicio : null;
+  const horaFinFinal = hora_fin && hora_fin.trim() !== "" ? hora_fin : null;
   let imagenesArray = req.file ? [req.file.filename] : [];
   let fotosJSON = JSON.stringify(imagenesArray);
 
-  const sql = `INSERT INTO evento (nombre_evento, fecha, hora, lugar, ubicacion, observaciones, imagen_urls) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  const sql = `INSERT INTO evento (nombre_evento, fecha, hora_inicio, hora_fin, lugar, ubicacion, observaciones, imagen_urls) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
   connection.query(
     sql,
     [
       nombre_evento,
       fecha,
-      horaFinal,
+      horaInicioFinal,
+      horaFinFinal,
       lugar,
       ubicacion,
       observaciones,
@@ -110,12 +111,14 @@ router.post("/editar", upload.single("imagen"), (req, res) => {
     id_evento,
     nombre_evento,
     fecha,
-    hora,
+    hora_inicio,
+    hora_fin,
     lugar,
     ubicacion,
     observaciones,
   } = req.body;
-  const horaFinal = hora && hora.trim() !== "" ? hora : null;
+  const horaInicioFinal = hora_inicio && hora_inicio.trim() !== "" ? hora_inicio : null;
+  const horaFinFinal = hora_fin && hora_fin.trim() !== "" ? hora_fin : null;
 
   connection.query(
     "SELECT imagen_urls FROM evento WHERE id_evento = ?",
@@ -132,14 +135,15 @@ router.post("/editar", upload.single("imagen"), (req, res) => {
       if (req.file) imagenesArray = [req.file.filename];
       let fotosJSON = JSON.stringify(imagenesArray);
 
-      const sqlUpdate = `UPDATE evento SET nombre_evento = ?, fecha = ?, hora = ?, lugar = ?, ubicacion = ?, observaciones = ?, imagen_urls = ? WHERE id_evento = ?`;
+      const sqlUpdate = `UPDATE evento SET nombre_evento = ?, fecha = ?, hora_inicio = ?, hora_fin = ?, lugar = ?, ubicacion = ?, observaciones = ?, imagen_urls = ? WHERE id_evento = ?`;
 
       connection.query(
         sqlUpdate,
         [
           nombre_evento,
           fecha,
-          horaFinal,
+          horaInicioFinal,
+          horaFinFinal,
           lugar,
           ubicacion,
           observaciones,
@@ -183,7 +187,6 @@ router.delete("/eliminar/:id", (req, res) => {
 router.post("/asignar", (req, res) => {
   const { id_evento, id_responsable } = req.body;
 
-  // 1. Borramos a TODOS los representantes anteriores de este evento (Limpiamos datos sucios)
   const deleteSql = "DELETE FROM evento_responsable WHERE id_evento = ?";
 
   connection.query(deleteSql, [id_evento], (errDelete) => {
@@ -192,19 +195,21 @@ router.post("/asignar", (req, res) => {
         .status(500)
         .json({ success: false, error: "Error BD: " + errDelete.sqlMessage });
 
-    // 2. Asignamos al nuevo y único representante
-    const sql =
-      "INSERT INTO evento_responsable (id_evento, id_responsable) VALUES (?, ?)";
-    connection.query(sql, [id_evento, id_responsable], (err) => {
-      if (err)
-        return res
-          .status(500)
-          .json({ success: false, error: "Error BD: " + err.sqlMessage });
-      res.json({
-        success: true,
-        message: "Responsable asignado correctamente",
-      });
-    });
+    if (id_responsable && id_responsable !== "") {
+        const sql = "INSERT INTO evento_responsable (id_evento, id_responsable) VALUES (?, ?)";
+        connection.query(sql, [id_evento, id_responsable], (err) => {
+        if (err)
+            return res
+            .status(500)
+            .json({ success: false, error: "Error BD: " + err.sqlMessage });
+        res.json({
+            success: true,
+            message: "Responsable asignado correctamente",
+        });
+        });
+    } else {
+        res.json({ success: true, message: "Se ha quitado al responsable del evento" });
+    }
   });
 });
 

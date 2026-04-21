@@ -1,11 +1,10 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const connection = require("../../db"); // Asegúrate de que esta ruta apunte a tu db.js
+const connection = require('../../db');
 
-// ================= API: OBTENER LISTA DE PARTICIPANTES =================
-router.get("/", (req, res) => {
-  // Consulta SQL limpia, sin puntaje y uniendo la tabla juego
-  const sql = `
+// ================= API: OBTENER LISTA DE PARTICIPANTES Y SATISFACCIÓN =================
+router.get('/', (req, res) => {
+    const sql = `
         SELECT 
             p.nombre,
             p.edad,
@@ -23,15 +22,13 @@ router.get("/", (req, res) => {
         ORDER BY s.fecha DESC
     `;
 
-  connection.query(sql, (err, results) => {
-    if (err) {
-      console.error("Error BD:", err);
-      return res
-        .status(500)
-        .json({ success: false, error: "Error al obtener los participantes" });
-    }
-    res.json({ success: true, data: results });
-  });
+    connection.query(sql, (err, results) => {
+        if (err) {
+            console.error("Error BD:", err);
+            return res.status(500).json({ success: false, error: "Error al consultar participantes" });
+        }
+        res.json({ success: true, data: results });
+    });
 });
 
 module.exports = router;

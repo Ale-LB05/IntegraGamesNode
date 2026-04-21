@@ -1,21 +1,26 @@
 const formLogin = document.getElementById("loginForm");
 const msg = document.getElementById("msg");
+const btnSubmit = document.getElementById("btnSubmit");
 
 formLogin.addEventListener("submit", async (e) => {
-  // Evita que la página intente cambiar de URL por su cuenta
   e.preventDefault();
 
-  msg.textContent = "Validando...";
-  msg.style.color = "blue";
+  // Estado de carga UX
+  const originalText = btnSubmit.innerHTML;
+  btnSubmit.innerHTML =
+    '<i class="fa-solid fa-spinner fa-spin me-1"></i> Validando...';
+  btnSubmit.disabled = true;
 
-  // Ahora enviamos "correo" porque así lo espera tu server.js
+  // Limpiar mensajes previos
+  msg.textContent = "";
+  msg.style.color = "";
+
   const body = {
     correo: document.getElementById("correo").value.trim(),
     password: document.getElementById("password").value.trim(),
   };
 
   try {
-    // Usamos ruta relativa porque el frontend y el backend viven en el mismo localhost
     const resp = await fetch("/api/login", {
       method: "POST",
       headers: {
@@ -26,26 +31,40 @@ formLogin.addEventListener("submit", async (e) => {
 
     const data = await resp.json();
 
+    // Si la respuesta del servidor no es OK (Ej. 401 Unauthorized)
     if (!resp.ok) {
       msg.textContent = data.error || "Credenciales incorrectas";
-      msg.style.color = "red";
+      msg.style.color = "#ff6b6b"; // Rojo claro que resalta en fondo oscuro
+
+      // Restaurar el botón
+      btnSubmit.innerHTML = originalText;
+      btnSubmit.disabled = false;
+
+      // Limpiar la contraseña para intentar de nuevo
+      document.getElementById("password").value = "";
       return;
     }
 
-    // Guardar sesión (JWT)
+    // ÉXITO: Guardar sesión (JWT)
     localStorage.setItem("token", data.token);
     localStorage.setItem("usuario", data.usuario);
     localStorage.setItem("rol", data.rol);
 
-    msg.textContent = "Bienvenido " + data.usuario;
-    msg.style.color = "green";
+    // Mensaje de éxito
+    msg.textContent = `¡Bienvenido, ${data.usuario}!`;
+    msg.style.color = "#00d2ff"; // Azul cyan
+    btnSubmit.innerHTML =
+      '<i class="fa-solid fa-check me-1"></i> Accediendo...';
 
     // Redirigir al panel principal
     setTimeout(() => {
       window.location.href = "/menu.html";
-    }, 1000);
+    }, 1200);
   } catch (error) {
-    msg.textContent = "Error de conexión con el servidor";
-    msg.style.color = "red";
+    msg.textContent = "Error de conexión con el servidor.";
+    msg.style.color = "#ff6b6b";
+
+    btnSubmit.innerHTML = originalText;
+    btnSubmit.disabled = false;
   }
 });

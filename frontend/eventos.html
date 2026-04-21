@@ -1,208 +1,163 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
+<head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Eventos | IntegraGames</title>
-
     <link rel="icon" href="/img/logo.png" />
     <link href="/css/styles.css" rel="stylesheet" />
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" />
     <link href="/css/sb-admin-2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-      .img-evento {
-        width: 120px;
-        height: 120px;
-        object-fit: cover;
-        border-radius: 15px;
-        margin-right: 15px;
-      }
-      .sidebar-brand {
-        font-size: 20px;
-        font-weight: bold;
-        letter-spacing: 1px;
-      }
-      .sidebar .nav-link i {
-        font-size: 16px;
-        margin-right: 8px;
-      }
-      .sidebar .nav-link:hover {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-      }
-      .sidebar .nav-link span {
-        font-weight: 500;
-      }
-      .sidebar-divider {
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
-      }
-      .sidebar-heading {
-        font-size: 12px;
-        letter-spacing: 1px;
-        opacity: 0.7;
-      }
+        body { background: #eef4ff; }
+        .text-primary { color: #4e73df !important; }
+        .text-secondary { color: #858796 !important; }
+        .bg-primary { background-color: #4e73df !important; }
+        .rounded-4 { border-radius: 1rem !important; }
+        .rounded-top-4 { border-top-left-radius: 1rem !important; border-top-right-radius: 1rem !important; }
+        
+        .evento-card {
+            display: flex;
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            border-left: 6px solid #4e73df;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+        .evento-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        .evento-card.pasado {
+            border-left-color: #858796;
+            background: #f8f9fc;
+            opacity: 0.9;
+        }
+        .evento-card.pasado .img-evento {
+            filter: grayscale(100%);
+            opacity: 0.8;
+        }
+        .img-evento {
+            width: 160px; 
+            height: 160px; 
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid #e3e6f0;
+            flex-shrink: 0;
+        }
+        .acciones-evento {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+            border-left: 1px solid #e3e6f0;
+            padding-left: 20px;
+            min-width: 60px;
+        }
+        @media (max-width: 768px) {
+            .evento-card { flex-direction: column; align-items: center; text-align: center; }
+            .img-evento { width: 100%; max-width: 250px; height: 200px; margin-bottom: 15px; }
+            .acciones-evento {
+                flex-direction: row; border-left: none; border-top: 1px solid #e3e6f0;
+                padding-left: 0; padding-top: 15px; margin-top: 15px; width: 100%;
+            }
+        }
+        optgroup[label="DISPONIBLES"] { color: #1cc88a; font-weight: bold; }
+        optgroup[label="OCUPADOS EN OTROS EVENTOS"] { color: #e74a3b; font-weight: bold; }
+        option { color: #333; font-weight: normal; font-style: normal; }
+        .sidebar-brand { font-size: 20px; font-weight: bold; letter-spacing: 1px; }
     </style>
-  </head>
+</head>
 
-  <body id="page-top" class="sidebar-toggled">
+<body id="page-top">
     <div id="wrapper">
-      <ul
-        class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
-        id="accordionSidebar"
-      >
-        <a
-          class="sidebar-brand d-flex align-items-center justify-content-center"
-          href="/menu.html"
-        >
-          <div class="sidebar-brand-icon">
-            <i class="fas fa-gamepad"></i>
-          </div>
-          <div class="sidebar-brand-text mx-2">IntegraGames</div>
-        </a>
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/menu.html">
+                <div class="sidebar-brand-icon"><i class="fas fa-gamepad"></i></div>
+                <div class="sidebar-brand-text mx-2">IntegraGames</div>
+            </a>
 
-        <hr class="sidebar-divider my-0" />
+            <hr class="sidebar-divider my-0" />
 
-        <li class="nav-item">
-          <a class="nav-link" href="/menu.html">
-            <i class="fas fa-home"></i> <span>Inicio</span>
-          </a>
-        </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/menu.html"><i class="fas fa-fw fa-home"></i> <span>Inicio</span></a>
+            </li>
 
-        <hr class="sidebar-divider" />
-        <div class="sidebar-heading">Administración</div>
+            <hr class="sidebar-divider item-admin" />
+            <div class="sidebar-heading item-admin">Administración</div>
 
-        <li class="nav-item" id="menuPersonal">
-          <a class="nav-link" href="/personal.html">
-            <i class="fas fa-user"></i> <span>Personal</span>
-          </a>
-        </li>
+            <li class="nav-item item-admin" id="menuPersonal">
+                <a class="nav-link" href="/personal.html"><i class="fas fa-fw fa-user"></i> <span>Personal</span></a>
+            </li>
+            <li class="nav-item active item-admin">
+                <a class="nav-link" href="/eventos.html"><i class="fas fa-fw fa-calendar-alt"></i> <span>Eventos</span></a>
+            </li>
+            <li class="nav-item item-admin" id="menuEscuelas">
+                <a class="nav-link" href="/escuelas.html"><i class="fas fa-fw fa-school"></i> <span>Escuelas</span></a>
+            </li>
 
-        <li class="nav-item active">
-          <a class="nav-link" href="/eventos.html">
-            <i class="fas fa-calendar-alt"></i> <span>Eventos</span>
-          </a>
-        </li>
-
-        <li class="nav-item" id="menuEscuelas">
-          <a class="nav-link" href="/escuelas.html">
-            <i class="fas fa-school"></i> <span>Escuelas</span>
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed"
-            href="#"
-            data-toggle="collapse"
-            data-target="#collapseUsuarios"
-          >
-            <i class="fas fa-users"></i> <span>Historial</span>
-          </a>
-          <div id="collapseUsuarios" class="collapse">
-            <div class="bg-white py-2 collapse-inner rounded">
-              <h6 class="collapse-header">Historial:</h6>
-              <a class="collapse-item" href="/encargadoEvento.html"
-                ><i class="fas fa-user-tie"></i> Eventos</a
-              >
-              <a class="collapse-item" href="/lista.html"
-                ><i class="fas fa-users"></i> Participantes</a
-              >
-            </div>
-          </div>
-        </li>
-
-        <hr class="sidebar-divider" />
-        <div class="sidebar-heading">Información</div>
-        <li class="nav-item">
-          <a class="nav-link" href="https://share.google/2xNdfPbTZ1n7FfE9E"
-            ><i class="fas fa-university"></i> <span>UTM</span></a
-          >
-        </li>
-
-        <hr class="sidebar-divider" />
-        <div class="sidebar-heading">Contacto</div>
-        <li class="nav-item">
-          <a class="nav-link" href="https://www.facebook.com/share/1CTdx2LSvG/"
-            ><i class="fab fa-facebook"></i> <span>Facebook</span></a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            href="https://www.instagram.com/utmmorelia?igsh=NzBsNHV1YTRyeTZk"
-            ><i class="fab fa-instagram"></i> <span>Instagram</span></a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            href="https://www.tiktok.com/@utmorelia?_r=1&_t=ZS-94h24oJcmpk"
-            ><i class="fab fa-tiktok"></i> <span>TikTok</span></a
-          >
-        </li>
-
-        <hr class="sidebar-divider" />
-        <div class="sidebar-heading">Sesión</div>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            href="#"
-            data-toggle="modal"
-            data-target="#logoutModal"
-          >
-            <i class="fas fa-sign-out-alt"></i> <span>Salir</span>
-          </a>
-        </li>
-
-        <hr class="sidebar-divider d-none d-md-block" />
-        <div class="text-center d-none d-md-inline">
-          <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
-      </ul>
-      <div id="content-wrapper" class="d-flex flex-column">
-        <div id="content">
-          <nav
-            class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow"
-          >
-            <div class="d-flex align-items-center">
-              <button
-                id="sidebarToggleTop"
-                class="btn btn-link d-md-none rounded-circle mr-2"
-              >
-                <i class="fa fa-bars"></i>
-              </button>
-              <img src="/img/logo.png" style="height: 70px" />
-            </div>
-
-            <ul class="navbar-nav ml-auto">
-              <div class="topbar-divider d-none d-sm-block"></div>
-
-              <li class="nav-item dropdown no-arrow">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="userDropdown"
-                  role="button"
-                  data-toggle="dropdown"
-                >
-                  <span
-                    class="mr-2 d-none d-lg-inline text-gray-600 small"
-                    id="nombreUsuarioTop"
-                    >Cargando...</span
-                  >
-                  <img
-                    class="img-profile rounded-circle"
-                    src="/img/user.jpg"
-                    style="object-fit: cover"
-                  />
+            <li class="nav-item item-admin">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsuarios">
+                    <i class="fas fa-fw fa-users"></i> <span>Historial</span>
                 </a>
+                <div id="collapseUsuarios" class="collapse">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Historial:</h6>
+                        <a class="collapse-item" href="/encargadoEvento.html"><i class="fas fa-user-tie"></i> Eventos</a>
+                        <a class="collapse-item" href="/lista.html"><i class="fas fa-users"></i> Participantes</a>
+                    </div>
+                </div>
+            </li>
 
-                <div
+            <hr class="sidebar-divider" />
+            <div class="sidebar-heading">Información</div>
+            <li class="nav-item">
+                <a class="nav-link" href="https://ut-morelia.edu.mx" target="_blank"><i class="fas fa-fw fa-university"></i> <span>UTM</span></a>
+            </li>
+
+            <hr class="sidebar-divider" />
+            <div class="sidebar-heading">Contacto</div>
+            <li class="nav-item">
+                <a class="nav-link" href="https://www.facebook.com/share/1JrTM7N5jB/" target="_blank"><i class="fab fa-fw fa-facebook"></i> <span>Facebook</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://www.instagram.com/utmmorelia?igsh=NzBsNHVlYTRyeTZk" target="_blank"><i class="fab fa-fw fa-instagram"></i> <span>Instagram</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://www.tiktok.com/@utmorelia?_r=1&_t=ZS-94h24oJcmpk" target="_blank"><i class="fab fa-fw fa-tiktok"></i> <span>TikTok</span></a>
+            </li>
+
+            <hr class="sidebar-divider" />
+            <div class="sidebar-heading">Sesión</div>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">
+                    <i class="fas fa-fw fa-sign-out-alt"></i> <span>Salir</span>
+                </a>
+            </li>
+
+            <hr class="sidebar-divider d-none d-md-block" />
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-2"><i class="fa fa-bars"></i></button>
+                    <img src="/img/logo.png" style="height: 70px" />
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="nombreUsuarioTop">Cargando...</span>
+                                <img class="img-profile rounded-circle" src="/img/user.jpg" style="object-fit: cover" />
+                            </a>
+                            <div
                   class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                 >
                   <a class="dropdown-item" href="/perfil.html">
@@ -222,301 +177,313 @@
                     Cerrar sesión
                   </a>
                 </div>
-              </li>
-            </ul>
-          </nav>
-          <div class="container-fluid mt-4">
-            <h1 class="h3 mb-4 text-gray-800">Panel de Eventos</h1>
+                        </li>
+                    </ul>
+                </nav>
 
-            <div class="card shadow mb-4">
-              <div
-                class="card-header py-3 d-flex flex-column flex-md-row justify-content-between align-items-center"
-              >
-                <button
-                  class="btn btn-success mb-2 mb-md-0"
-                  data-toggle="modal"
-                  data-target="#modalCrearEvento"
-                >
-                  <i class="fas fa-plus"></i> Nuevo Evento
-                </button>
+                <div class="container-fluid mt-4">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4 flex-wrap">
+                        <h1 class="h3 text-gray-800 mb-2 fw-bold">Eventos</h1>
+                        <div class="d-flex align-items-center flex-wrap">
+                            <div class="input-group mr-2 mb-2" style="width: 350px;">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-white border-right-0"><i class="fas fa-search text-primary"></i></span>
+                                </div>
+                                <input type="text" id="buscador" class="form-control border-left-0" placeholder="Buscar evento...">
+                            </div>
+                            <button class="btn btn-success mb-2" data-toggle="modal" data-target="#modalCrear">
+                                <i class="fas fa-plus"></i> Nuevo Evento
+                            </button>
+                        </div>
+                    </div>
 
-                <div class="input-group" style="max-width: 350px">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"
-                      ><i class="fas fa-search"></i
-                    ></span>
-                  </div>
-                  <input
-                    type="text"
-                    id="filtroEventos"
-                    class="form-control"
-                    placeholder="Buscar nombre, fecha, lugar..."
-                  />
+                    <ul class="nav nav-tabs mb-4" id="eventosTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active fw-bold text-primary" id="activos-tab" data-toggle="tab" href="#activos" role="tab">
+                                <i class="fas fa-calendar-check mr-1"></i> Eventos Activos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fw-bold text-secondary" id="pasados-tab" data-toggle="tab" href="#pasados" role="tab">
+                                <i class="fas fa-history mr-1"></i> Historial Pasados
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="eventosTabContent">
+                        <div class="tab-pane fade show active" id="activos" role="tabpanel">
+                            <div class="row" id="contenedor-activos">
+                                <p class="text-center w-100">Cargando eventos...</p>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="pasados" role="tabpanel">
+                            <div class="row" id="contenedor-pasados">
+                                <p class="text-center w-100">Cargando historial...</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="card-body">
-                <div class="row" id="contenedor-eventos">
-                  <p class="text-center w-100">Cargando eventos...</p>
-                </div>
-              </div>
             </div>
-          </div>
+
+            <footer class="sticky-footer" style="background-color: #ffffff !important; border-top: 1px solid #e3e6f0;">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span style="color: #858796 !important; font-size: 0.9rem;">Copyright &copy; IntegraGames 2026</span>
+                    </div>
+                </div>
+            </footer>
         </div>
-
-        <footer class="sticky-footer bg-white">
-          <div class="container my-auto">
-            <div class="copyright text-center my-auto">
-              <span>Copyright &copy; IntegraGames 2026</span>
-            </div>
-          </div>
-        </footer>
-      </div>
     </div>
 
-    <a class="scroll-to-top rounded" href="#page-top">
-      <i class="fas fa-angle-up"></i>
-    </a>
+    <div class="modal fade" id="modalInfoPasado" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg border-0 rounded-4">
+                <div class="modal-header bg-primary text-white rounded-top-4">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-chart-bar mr-2"></i> Detalles del Evento</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body p-4" id="contenidoInfoPasado"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalCrear" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <form id="formCrearEvento" enctype="multipart/form-data" class="modal-content shadow-lg border-0 rounded-4">
+                <div class="modal-header bg-primary text-white rounded-top-4">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-calendar-plus mr-2"></i> Nuevo Evento</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body p-4">
+                    <h6 class="fw-bold mb-3 border-bottom pb-2" style="color: #4e73df;">
+                        <i class="fas fa-info-circle mr-1"></i> Información General
+                    </h6>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-light border-right-0" style="color: #4e73df;"><i class="fas fa-heading"></i></span>
+                        <input type="text" id="crearNombreEv" name="nombre_evento" class="form-control border-left-0" placeholder="Ej: Feria de las ciencias" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-right-0" style="color: #4e73df;"><i class="fas fa-calendar-day"></i></span>
+                                <input type="date" id="crearFechaEv" name="fecha" class="form-control border-left-0" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="input-group" title="Hora de inicio">
+                                <span class="input-group-text bg-light border-right-0" style="color: #4e73df;"><i class="fas fa-clock"></i></span>
+                                <input type="time" id="crearHoraInicioEv" name="hora_inicio" class="form-control border-left-0" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="input-group" title="Hora de fin">
+                                <span class="input-group-text bg-light border-right-0" style="color: #4e73df;"><i class="fas fa-hourglass-end"></i></span>
+                                <input type="time" id="crearHoraFinEv" name="hora_fin" class="form-control border-left-0" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold mb-3 mt-2 border-bottom pb-2" style="color: #4e73df;">
+                        <i class="fas fa-map-marked-alt mr-1"></i> Ubicación
+                    </h6>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-light border-right-0" style="color: #4e73df;"><i class="fas fa-building"></i></span>
+                        <input type="text" id="crearLugarEv" name="lugar" class="form-control border-left-0" placeholder="Ej: Cancha municipal" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-light border-right-0" style="color: #4e73df;"><i class="fas fa-map-pin"></i></span>
+                        <input type="text" id="crearUbicacionEv" name="ubicacion" class="form-control border-left-0" placeholder="Pega link de Google Maps o dirección" required>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button" onclick="abrirModalMapa('crearUbicacionEv')">
+                                <i class="fas fa-map"></i> Mapa
+                            </button>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold mb-3 mt-2 border-bottom pb-2" style="color: #4e73df;">
+                        <i class="fas fa-image mr-1"></i> Detalles y Multimedia
+                    </h6>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-light border-right-0" style="color: #4e73df;"><i class="fas fa-align-left"></i></span>
+                        <textarea id="crearObsEv" name="observaciones" class="form-control border-left-0" rows="2" placeholder="Detalles del evento..."></textarea>
+                    </div>
+                    <div class="row align-items-center bg-light p-3 rounded-3 mx-0 border">
+                        <div class="col-md-4 text-center border-right">
+                            <p class="mb-2 small fw-bold text-uppercase" style="color: #4e73df;">Vista Previa</p>
+                            <img id="previewNuevo" src="/img/default.png" style="width: 100px; height: 100px; object-fit: cover; border-radius: 12px; border: 3px solid #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        </div>
+                        <div class="col-md-8 pl-md-4 mt-3 mt-md-0">
+                            <p class="mb-2 small fw-bold text-uppercase" style="color: #4e73df;">Subir Imagen</p>
+                            <input type="file" id="crearImagenEv" name="imagen" class="form-control form-control-sm" accept="image/*" onchange="document.getElementById('previewNuevo').src = window.URL.createObjectURL(this.files[0])">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-top-0">
+                    <button type="button" class="btn btn-outline-danger rounded-pill px-4" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success text-white fw-bold rounded-pill px-4 shadow-sm">
+                        <i class="fas fa-save mr-1"></i> Guardar Evento
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <form id="formEditarEvento" enctype="multipart/form-data" class="modal-content shadow-lg border-0 rounded-4">
+                <div class="modal-header bg-info text-white rounded-top-4">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-edit mr-2"></i> Editar Evento</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body p-4">
+                    <input type="hidden" name="id_evento" id="editIdEv">
+                    <h6 class="text-info fw-bold mb-3 border-bottom pb-2">
+                        <i class="fas fa-info-circle mr-1"></i> Información General
+                    </h6>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-light text-info border-right-0"><i class="fas fa-heading"></i></span>
+                        <input type="text" id="editNombreEv" name="nombre_evento" class="form-control border-left-0" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-info border-right-0"><i class="fas fa-calendar-day"></i></span>
+                                <input type="date" id="editFechaEv" name="fecha" class="form-control border-left-0" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="input-group" title="Hora de inicio">
+                                <span class="input-group-text bg-light text-info border-right-0"><i class="fas fa-clock"></i></span>
+                                <input type="time" id="editHoraInicioEv" name="hora_inicio" class="form-control border-left-0" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="input-group" title="Hora de fin">
+                                <span class="input-group-text bg-light text-info border-right-0"><i class="fas fa-hourglass-end"></i></span>
+                                <input type="time" id="editHoraFinEv" name="hora_fin" class="form-control border-left-0" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="text-info fw-bold mb-3 mt-2 border-bottom pb-2">
+                        <i class="fas fa-map-marked-alt mr-1"></i> Ubicación
+                    </h6>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-light text-info border-right-0"><i class="fas fa-building"></i></span>
+                        <input type="text" id="editLugarEv" name="lugar" class="form-control border-left-0" required>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-light text-info border-right-0"><i class="fas fa-map-pin"></i></span>
+                        <input type="text" id="editUbicacionEv" name="ubicacion" class="form-control border-left-0" required>
+                        <div class="input-group-append">
+                            <button class="btn btn-info" type="button" onclick="abrirModalMapa('editUbicacionEv')">
+                                <i class="fas fa-map"></i> Mapa
+                            </button>
+                        </div>
+                    </div>
+
+                    <h6 class="text-info fw-bold mb-3 mt-2 border-bottom pb-2">
+                        <i class="fas fa-image mr-1"></i> Detalles y Multimedia
+                    </h6>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-light text-info border-right-0"><i class="fas fa-align-left"></i></span>
+                        <textarea id="editObsEv" name="observaciones" class="form-control border-left-0" rows="2"></textarea>
+                    </div>
+                    <div class="row align-items-center bg-light p-3 rounded-3 mx-0 border">
+                        <div class="col-md-4 text-center border-right">
+                            <p class="mb-2 small fw-bold text-muted text-uppercase">Imagen Actual</p>
+                            <img id="previewImagenEv" style="width: 100px; height: 100px; object-fit: cover; border-radius: 12px; border: 3px solid #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        </div>
+                        <div class="col-md-8 pl-md-4 mt-3 mt-md-0">
+                            <p class="mb-2 small fw-bold text-info text-uppercase">Subir Nueva Imagen</p>
+                            <input type="file" id="editImagenEv" name="imagen" class="form-control form-control-sm" accept="image/*" onchange="document.getElementById('previewImagenEv').src = window.URL.createObjectURL(this.files[0])">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-top-0">
+                    <button type="button" class="btn btn-outline-danger rounded-pill px-4" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-info text-white fw-bold rounded-pill px-4 shadow-sm">
+                        <i class="fas fa-save mr-1"></i> Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalAsignarResp" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <form id="formAsignarResponsable" class="modal-content shadow-lg border-0 rounded-4">
+                <div class="modal-header bg-warning text-dark rounded-top-4">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-user-tag mr-2"></i> Gestión de Personal</h5>
+                    <button type="button" class="close text-dark" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body p-4">
+                    <input type="hidden" id="idEventoAsignar">
+                    <div class="text-center mb-4">
+                        <h6 class="text-muted text-uppercase small font-weight-bold">Evento Seleccionado</h6>
+                        <h4 class="text-black font-weight-bold" id="asignarNombreEvento"></h4>
+                        <span id="badgeFecha" class="badge px-3 py-2 rounded-pill mt-2" style="background-color: #ffc107; color: black; font-size: 0.9rem;"></span>
+                    </div>
+
+                    <label class="fw-bold text-dark">Encargado del Evento</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-right-0"><i class="fas fa-user-tie text-warning"></i></span>
+                        <select id="selectResponsable" class="form-control border-left-0"></select>
+                    </div>
+
+                    <div id="warningOcupado" class="alert alert-danger mt-3 py-2 px-3 small font-weight-bold" style="display:none; border-radius: 10px;"></div>
+                </div>
+                <div class="modal-footer bg-light border-top-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-warning text-dark font-weight-bold rounded-pill px-4 shadow-sm">
+                        <i class="fas fa-check-circle mr-1"></i> Confirmar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalSelectorMapa" tabindex="-1" style="z-index: 1060">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold text-primary"><i class="fas fa-map-marked-alt"></i> Buscar en el Mapa</h5>
+                    <button class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <input type="text" id="buscadorMapaSelector" class="form-control" placeholder="Escribe un lugar (ej. Catedral Morelia)..." />
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button" onclick="buscarEnMapaSecundario()"><i class="fas fa-search"></i> Buscar</button>
+                        </div>
+                    </div>
+                    <div id="mapaSecundario" style="width: 100%; height: 350px; border-radius: 8px; background-color: #eee;"></div>
+                </div>
+                <div class="modal-footer d-flex justify-content-between align-items-center">
+                    <span id="textoCoordenadas" class="text-muted small font-weight-bold">Coordenadas: -</span>
+                    <div>
+                        <button class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-success font-weight-bold text-white" onclick="confirmarUbicacion()"><i class="fas fa-check"></i> Usar esta ubicación</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="modal fade" id="logoutModal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Cerrar sesión</h5>
-            <button class="close" data-dismiss="modal">&times;</button>
-          </div>
-          <div class="modal-body">¿Seguro que deseas cerrar sesión?</div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" data-dismiss="modal">
-              Cancelar
-            </button>
-            <button class="btn btn-primary" onclick="cerrarSesion()">
-              Cerrar sesión
-            </button>
-          </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cerrar sesión</h5>
+                    <button class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">¿Seguro que deseas salir?</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary" onclick="cerrarSesion()">Cerrar sesión</button>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-
-    <div class="modal fade" id="modalCrearEvento">
-      <div class="modal-dialog">
-        <div class="modal-content p-3">
-          <form id="formCrearEvento">
-            <input
-              type="text"
-              id="crearNombreEv"
-              class="form-control mb-2"
-              placeholder="Nombre del evento"
-              required
-            />
-            <div class="d-flex mb-2">
-              <input
-                type="date"
-                id="crearFechaEv"
-                class="form-control mr-2"
-                required
-              />
-              <input type="time" id="crearHoraEv" class="form-control" />
-            </div>
-            <input
-              type="text"
-              id="crearLugarEv"
-              class="form-control mb-2"
-              placeholder="Lugar (ej. Auditorio)"
-              required
-            />
-
-            <div class="input-group mb-2">
-              <input
-                type="text"
-                id="crearUbicacionEv"
-                class="form-control"
-                placeholder="Escribe un lugar y presiona Buscar para coordenadas..."
-              />
-              <div class="input-group-append">
-                <button
-                  class="btn btn-primary"
-                  type="button"
-                  onclick="buscarDireccion('crearUbicacionEv')"
-                >
-                  <i class="fas fa-search"></i> Buscar
-                </button>
-              </div>
-            </div>
-
-            <textarea
-              id="crearObsEv"
-              class="form-control mb-2"
-              placeholder="Observaciones"
-            ></textarea>
-            <input
-              type="file"
-              id="crearImagenEv"
-              class="form-control mb-3"
-              accept="image/*"
-            />
-            <button type="submit" class="btn btn-success w-100">
-              Guardar Evento
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal fade" id="modalEditarEvento">
-      <div class="modal-dialog">
-        <div class="modal-content p-3">
-          <form id="formEditarEvento">
-            <input type="hidden" id="editIdEv" />
-            <input
-              type="text"
-              id="editNombreEv"
-              class="form-control mb-2"
-              required
-            />
-            <div class="d-flex mb-2">
-              <input
-                type="date"
-                id="editFechaEv"
-                class="form-control mr-2"
-                required
-              />
-              <input type="time" id="editHoraEv" class="form-control" />
-            </div>
-            <input
-              type="text"
-              id="editLugarEv"
-              class="form-control mb-2"
-              required
-            />
-
-            <div class="input-group mb-2">
-              <input
-                type="text"
-                id="editUbicacionEv"
-                class="form-control"
-                placeholder="Escribe un lugar y presiona Buscar para coordenadas..."
-              />
-              <div class="input-group-append">
-                <button
-                  class="btn btn-primary"
-                  type="button"
-                  onclick="buscarDireccion('editUbicacionEv')"
-                >
-                  <i class="fas fa-search"></i> Buscar
-                </button>
-              </div>
-            </div>
-
-            <textarea id="editObsEv" class="form-control mb-2"></textarea>
-            <img id="previewImagenEv" width="100" class="mb-2 rounded" />
-            <input
-              type="file"
-              id="editImagenEv"
-              class="form-control mb-3"
-              accept="image/*"
-            />
-            <button type="submit" class="btn btn-primary w-100">
-              Guardar Cambios
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal fade" id="modalAsignarResponsable">
-      <div class="modal-dialog">
-        <div class="modal-content p-3">
-          <div class="modal-header border-0 pb-0">
-            <h5 class="modal-title text-primary font-weight-bold">
-              Asignar Responsable
-            </h5>
-            <button class="close" data-dismiss="modal">&times;</button>
-          </div>
-          <div class="modal-body">
-            <form id="formAsignarResponsable">
-              <input type="hidden" id="idEventoAsignar" />
-              <label>Selecciona un encargado para este evento:</label>
-              <select
-                id="selectResponsable"
-                class="form-control mb-3"
-                required
-              ></select>
-              <button
-                type="submit"
-                class="btn btn-primary w-100 font-weight-bold"
-              >
-                <i class="fas fa-check"></i> Asignar
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="modal fade"
-      id="modalSelectorMapa"
-      tabindex="-1"
-      style="z-index: 1060"
-    >
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title font-weight-bold text-primary">
-              <i class="fas fa-map-marked-alt"></i> Buscar en el Mapa
-            </h5>
-            <button class="close" data-dismiss="modal">&times;</button>
-          </div>
-          <div class="modal-body">
-            <div class="input-group mb-3">
-              <input
-                type="text"
-                id="buscadorMapaSelector"
-                class="form-control"
-                placeholder="Escribe un lugar (ej. Catedral Morelia)..."
-              />
-              <div class="input-group-append">
-                <button
-                  class="btn btn-primary"
-                  type="button"
-                  onclick="buscarEnMapaSecundario()"
-                >
-                  <i class="fas fa-search"></i> Buscar
-                </button>
-              </div>
-            </div>
-
-            <div
-              id="mapaSecundario"
-              style="
-                width: 100%;
-                height: 350px;
-                border-radius: 8px;
-                background-color: #eee;
-              "
-            ></div>
-          </div>
-          <div
-            class="modal-footer d-flex justify-content-between align-items-center"
-          >
-            <span
-              id="textoCoordenadas"
-              class="text-muted small font-weight-bold"
-              >Coordenadas: -</span
-            >
-            <div>
-              <button class="btn btn-secondary" data-dismiss="modal">
-                Cancelar
-              </button>
-              <button
-                class="btn btn-success font-weight-bold text-white"
-                onclick="confirmarUbicacion()"
-              >
-                <i class="fas fa-check"></i> Usar esta ubicación
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <script src="/vendor/jquery/jquery.min.js"></script>
@@ -525,34 +492,5 @@
     <script src="/js/sb-admin-2.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="/js/eventos.js"></script>
-
-    <script>
-      // 1. Obtener datos del usuario
-      const usuario = localStorage.getItem("usuario");
-      const rol = (localStorage.getItem("rol") || "").toLowerCase();
-
-      // 2. Poner nombre y rol en la barra superior
-      document.getElementById("nombreUsuarioTop").textContent =
-        usuario + " - " + rol;
-
-      // 3. LÓGICA DE RESTRICCIÓN PARA PROMOTOR
-      if (rol === "promotor") {
-        // Ocultamos Personal y Escuelas
-        const itemPersonal = document.getElementById("menuPersonal");
-        const itemEscuelas = document.getElementById("menuEscuelas");
-
-        if (itemPersonal) itemPersonal.style.display = "none";
-        if (itemEscuelas) itemEscuelas.style.display = "none";
-
-        // Si quisieras ocultar toda la sección de "Administración"
-        // pero dejar los historiales, lo ideal es ocultar solo los hijos como hicimos arriba.
-      }
-
-      // Función para cerrar sesión
-      function cerrarSesion() {
-        localStorage.clear();
-        window.location.href = "/registroAdmin/login.html";
-      }
-    </script>
-  </body>
+</body>
 </html>

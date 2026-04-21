@@ -1,11 +1,10 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const connection = require("../../db"); // Ruta corregida hacia la raíz
+const connection = require('../../db');
 
 // ================= API: OBTENER HISTORIAL DE EVENTOS =================
-router.get("/", (req, res) => {
-  // Consulta SQL para traer eventos, sus representantes y el conteo de alumnos
-  const sql = `
+router.get('/', (req, res) => {
+    const sql = `
         SELECT 
             e.id_evento,
             e.nombre_evento,
@@ -17,19 +16,17 @@ router.get("/", (req, res) => {
         LEFT JOIN evento_responsable er ON e.id_evento = er.id_evento
         LEFT JOIN responsable r ON er.id_responsable = r.id_responsable
         LEFT JOIN participante p ON e.id_evento = p.id_evento
-        GROUP BY e.id_evento, e.nombre_evento, e.lugar, e.fecha
+        GROUP BY e.id_evento
         ORDER BY e.fecha DESC
     `;
 
-  connection.query(sql, (err, results) => {
-    if (err) {
-      console.error("Error BD:", err);
-      return res
-        .status(500)
-        .json({ success: false, error: "Error al obtener el historial" });
-    }
-    res.json({ success: true, data: results });
-  });
+    connection.query(sql, (err, results) => {
+        if (err) {
+            console.error("Error BD:", err);
+            return res.status(500).json({ success: false, error: "Error al consultar historial" });
+        }
+        res.json({ success: true, data: results });
+    });
 });
 
 module.exports = router;

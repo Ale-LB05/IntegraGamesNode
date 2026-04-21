@@ -2,35 +2,106 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <title>Historial Eventos | IntegraGames</title>
-    <link rel="icon" href="/img/logo.png" />
-    <link href="/css/styles.css" rel="stylesheet" />
+    <title>Historial de Eventos | IntegraGames</title>
+    <link rel="icon" href="/img/logo.png" type="image/png" />
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" />
     <link href="/css/sb-admin-2.min.css" rel="stylesheet" />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <link
+      href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
+      body {
+        background: #eef4ff;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .text-primary {
+        color: #4e73df !important;
+      }
+      .text-secondary {
+        color: #858796 !important;
+      }
+      .bg-primary {
+        background-color: #4e73df !important;
+      }
+
+      .card {
+        transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        border: none !important;
+        background: #ffffff;
+        border-radius: 20px !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
+      }
+      .card:hover {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+      }
+
+      /* Estilos de Tabla Premium */
+      .table-responsive {
+        border-radius: 15px;
+        overflow: hidden;
+      }
+      .table thead {
+        background: #4e73df;
+        color: white;
+        border-bottom: none;
+      }
+      .table thead th {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        border: none !important;
+        padding: 15px;
+      }
+      .table tbody tr {
+        border-bottom: 1px solid #f1f3f5;
+        transition: background-color 0.2s ease;
+      }
+      .table tbody tr:hover {
+        background-color: #f8f9fc;
+      }
+      .table tbody td {
+        vertical-align: middle;
+        border: none;
+        padding: 15px;
+        color: #5a5c69;
+      }
+      .rounded-pill {
+        border-radius: 50rem !important;
+      }
+
+      /* Controles de DataTables (Buscador oculto) */
+      .dataTables_wrapper .dataTables_filter {
+        display: none;
+      }
+      .dataTables_wrapper .dataTables_length select {
+        border-radius: 10px;
+        border: 1px solid #d1d3e2;
+      }
+
+      /* Paginación */
+      .page-item .page-link {
+        color: #333333 !important;
+      }
+      .page-item.active .page-link {
+        background-color: #4e73df !important;
+        border-color: #4e73df !important;
+        color: #ffffff !important;
+      }
+
       .sidebar-brand {
         font-size: 20px;
         font-weight: bold;
         letter-spacing: 1px;
       }
-      .bg-custom-table {
-        background: #3b82f6;
-        color: white;
-      }
-      /* Ajuste opcional por si el menú se empalma */
-      .sidebar-heading {
-        font-size: 12px;
-        letter-spacing: 1px;
-        opacity: 0.7;
-      }
     </style>
   </head>
 
-  <body id="page-top" class="sidebar-toggled">
+  <body id="page-top">
     <div id="wrapper">
       <ul
         class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
@@ -43,48 +114,40 @@
           <div class="sidebar-brand-icon"><i class="fas fa-gamepad"></i></div>
           <div class="sidebar-brand-text mx-2">IntegraGames</div>
         </a>
-
         <hr class="sidebar-divider my-0" />
-
         <li class="nav-item">
           <a class="nav-link" href="/menu.html"
-            ><i class="fas fa-home"></i> <span>Inicio</span></a
+            ><i class="fas fa-fw fa-home"></i> <span>Inicio</span></a
           >
         </li>
-
-        <hr class="sidebar-divider" />
-        <div class="sidebar-heading">Administración</div>
-
-        <li class="nav-item" id="menuPersonal">
-          <a class="nav-link" href="/personal.html">
-            <i class="fas fa-user"></i> <span>Personal</span>
-          </a>
+        <hr class="sidebar-divider item-admin" />
+        <div class="sidebar-heading item-admin">Administración</div>
+        <li class="nav-item item-admin" id="menuPersonal">
+          <a class="nav-link" href="/personal.html"
+            ><i class="fas fa-fw fa-user"></i> <span>Personal</span></a
+          >
         </li>
-
-        <li class="nav-item">
-          <a class="nav-link" href="/eventos.html">
-            <i class="fas fa-calendar-alt"></i> <span>Eventos</span>
-          </a>
+        <li class="nav-item item-admin">
+          <a class="nav-link" href="/eventos.html"
+            ><i class="fas fa-fw fa-calendar-alt"></i> <span>Eventos</span></a
+          >
         </li>
-
-        <li class="nav-item" id="menuEscuelas">
-          <a class="nav-link" href="/escuelas.html">
-            <i class="fas fa-school"></i> <span>Escuelas</span>
-          </a>
+        <li class="nav-item item-admin" id="menuEscuelas">
+          <a class="nav-link" href="/escuelas.html"
+            ><i class="fas fa-fw fa-school"></i> <span>Escuelas</span></a
+          >
         </li>
-
-        <li class="nav-item active">
+        <li class="nav-item item-admin active">
           <a
             class="nav-link collapsed"
             href="#"
             data-toggle="collapse"
             data-target="#collapseUsuarios"
           >
-            <i class="fas fa-users"></i> <span>Historial</span>
+            <i class="fas fa-fw fa-users"></i> <span>Historial</span>
           </a>
           <div id="collapseUsuarios" class="collapse show">
             <div class="bg-white py-2 collapse-inner rounded">
-              <h6 class="collapse-header">Historial:</h6>
               <a class="collapse-item active" href="/encargadoEvento.html"
                 ><i class="fas fa-user-tie"></i> Eventos</a
               >
@@ -94,55 +157,38 @@
             </div>
           </div>
         </li>
-
         <hr class="sidebar-divider" />
-        <div class="sidebar-heading">Información</div>
-        <li class="nav-item">
-          <a class="nav-link" href="https://share.google/2xNdfPbTZ1n7FfE9E"
-            ><i class="fas fa-university"></i> <span>UTM</span></a
-          >
-        </li>
+            <div class="sidebar-heading">Información</div>
+            <li class="nav-item">
+                <a class="nav-link" href="https://ut-morelia.edu.mx" target="_blank"><i class="fas fa-fw fa-university"></i> <span>UTM</span></a>
+            </li>
 
-        <hr class="sidebar-divider" />
-        <div class="sidebar-heading">Contacto</div>
-        <li class="nav-item">
-          <a class="nav-link" href="https://www.facebook.com/share/1CTdx2LSvG/"
-            ><i class="fab fa-facebook"></i> <span>Facebook</span></a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            href="https://www.instagram.com/utmmorelia?igsh=NzBsNHV1YTRyeTZk"
-            ><i class="fab fa-instagram"></i> <span>Instagram</span></a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            href="https://www.tiktok.com/@utmorelia?_r=1&_t=ZS-94h24oJcmpk"
-            ><i class="fab fa-tiktok"></i> <span>TikTok</span></a
-          >
-        </li>
+            <hr class="sidebar-divider" />
+            <div class="sidebar-heading">Contacto</div>
+            <li class="nav-item">
+                <a class="nav-link" href="https://www.facebook.com/share/1JrTM7N5jB/" target="_blank"><i class="fab fa-fw fa-facebook"></i> <span>Facebook</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://www.instagram.com/utmmorelia?igsh=NzBsNHVlYTRyeTZk" target="_blank"><i class="fab fa-fw fa-instagram"></i> <span>Instagram</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://www.tiktok.com/@utmorelia?_r=1&_t=ZS-94h24oJcmpk" target="_blank"><i class="fab fa-fw fa-tiktok"></i> <span>TikTok</span></a>
+            </li>
 
-        <hr class="sidebar-divider" />
-        <div class="sidebar-heading">Sesión</div>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            href="#"
-            data-toggle="modal"
-            data-target="#logoutModal"
-          >
-            <i class="fas fa-sign-out-alt"></i> <span>Salir</span>
-          </a>
-        </li>
+            <hr class="sidebar-divider" />
+            <div class="sidebar-heading">Sesión</div>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">
+                    <i class="fas fa-fw fa-sign-out-alt"></i> <span>Salir</span>
+                </a>
+            </li>
 
-        <hr class="sidebar-divider d-none d-md-block" />
-        <div class="text-center d-none d-md-inline">
-          <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
+            <hr class="sidebar-divider d-none d-md-block" />
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
       </ul>
+
       <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
           <nav
@@ -154,7 +200,6 @@
             >
               <i class="fa fa-bars"></i>
             </button>
-            <img src="/img/logo.png" style="height: 70px" />
             <ul class="navbar-nav ml-auto">
               <li class="nav-item dropdown no-arrow">
                 <a
@@ -175,7 +220,7 @@
                     style="object-fit: cover"
                   />
                 </a>
-                <div
+                 <div
                   class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                 >
                   <a class="dropdown-item" href="/perfil.html">
@@ -199,60 +244,83 @@
             </ul>
           </nav>
 
-          <div class="container-fluid mt-4">
-            <h1 class="h3 mb-4 text-gray-800">Historial de Eventos</h1>
-            <div class="card shadow mb-4">
-              <div
-                class="card-header py-3 d-flex flex-column flex-md-row justify-content-between align-items-center"
-              >
-                <h6 class="m-0 font-weight-bold text-primary mb-2 mb-md-0">
-                  Lista de Registros
-                </h6>
+          <div class="container-fluid">
+            <div
+              class="d-sm-flex align-items-center justify-content-between mb-4 flex-wrap"
+            >
+              <h1 class="h3 text-gray-800 mb-2 fw-bold">
+                <i class="fas fa-history mr-2"></i> Historial de Registros
+              </h1>
 
-                <div class="input-group" style="max-width: 350px">
+              <div class="d-flex align-items-center flex-wrap">
+                <div class="input-group mr-3 mb-2" style="width: 350px">
                   <div class="input-group-prepend">
-                    <span class="input-group-text"
-                      ><i class="fas fa-search"></i
+                    <span class="input-group-text bg-white border-right-0"
+                      ><i class="fas fa-search text-primary"></i
                     ></span>
                   </div>
                   <input
                     type="text"
-                    id="filtroHistorial"
-                    class="form-control"
-                    placeholder="Buscar evento, lugar o encargado..."
+                    id="buscadorPersonalizado"
+                    class="form-control border-left-0"
+                    placeholder="Buscar evento, responsable o lugar..."
                   />
                 </div>
+                <button
+                  onclick="confirmarExportacion()"
+                  class="btn btn-success mb-2 rounded-pill px-4 shadow-sm fw-bold"
+                >
+                  <i class="fas fa-file-excel mr-1"></i> Exportar a Excel
+                </button>
               </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table
-                    class="table table-bordered text-center"
-                    id="tablaHistorial"
-                  >
-                    <thead class="bg-custom-table">
-                      <tr>
-                        <th>Evento</th>
-                        <th>Lugar</th>
-                        <th>Fecha</th>
-                        <th>Responsable</th>
-                        <th>Total Alumnos</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td colspan="5">Cargando datos...</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+            </div>
+
+            <div class="card p-4 shadow-sm mb-5">
+              <div
+                class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3"
+              >
+                <h6 class="m-0 font-weight-bold" style="color: #4e73df">
+                  Resumen de Asistencia General
+                </h6>
+                <span
+                  class="badge bg-light text-dark border px-3 py-2 rounded-pill"
+                  id="totalEventosBadge"
+                >
+                  <i class="fas fa-database text-primary mr-1"></i> Total de
+                  eventos: 0
+                </span>
+              </div>
+
+              <div class="table-responsive">
+                <table class="table text-left w-100" id="tablaRegistros">
+                  <thead>
+                    <tr>
+                      <th class="pl-4">Nombre del Evento</th>
+                      <th>Fecha de Realización</th>
+                      <th>Lugar / Ubicación</th>
+                      <th>Personal a Cargo</th>
+                      <th class="text-center">Prospectos</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbodyHistorial"></tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
-        <footer class="sticky-footer bg-white">
+
+        <footer
+          class="sticky-footer"
+          style="
+            background-color: #ffffff !important;
+            border-top: 1px solid #e3e6f0;
+          "
+        >
           <div class="container my-auto">
             <div class="copyright text-center my-auto">
-              <span>IntegraGames 2026</span>
+              <span style="color: #858796 !important; font-size: 0.9rem"
+                >Copyright &copy; IntegraGames 2026</span
+              >
             </div>
           </div>
         </footer>
@@ -264,7 +332,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Cerrar sesión</h5>
-            <button class="close" data-dismiss="modal">&times;</button>
+            <button class="close" data-dismiss="modal">×</button>
           </div>
           <div class="modal-body">¿Seguro que deseas salir?</div>
           <div class="modal-footer">
@@ -281,32 +349,10 @@
 
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="/js/sb-admin-2.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
     <script src="/js/encargadoEvento.js"></script>
-
-    <script>
-      // 1. Obtener datos del usuario
-      const usuario = localStorage.getItem("usuario");
-      const rol = (localStorage.getItem("rol") || "").toLowerCase();
-
-      // 2. Colocar nombre en la barra superior
-      document.getElementById("nombreUsuarioTop").textContent =
-        usuario + " - " + rol;
-
-      // 3. Lógica de restricción para Promotor
-      if (rol === "promotor") {
-        const itemPersonal = document.getElementById("menuPersonal");
-        const itemEscuelas = document.getElementById("menuEscuelas");
-
-        if (itemPersonal) itemPersonal.style.display = "none";
-        if (itemEscuelas) itemEscuelas.style.display = "none";
-      }
-
-      // 4. Función para cerrar sesión
-      function cerrarSesion() {
-        localStorage.clear();
-        window.location.href = "/registroAdmin/login.html";
-      }
-    </script>
   </body>
 </html>

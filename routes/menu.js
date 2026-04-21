@@ -8,11 +8,11 @@ router.get("/", (req, res) => {
   const rol = (req.user?.rol || "participante").toLowerCase();
   const nombreUsuario = req.user?.usuario || "Invitado";
 
-  // Ya no existe el programador
+  // Ya no existe el programador, solo estos dos ven los eventos
   const rolesStaff = ["administrador", "promotor"];
   const esStaff = rolesStaff.includes(rol);
 
-  // 2. Respuesta base (Lo que ven los alumnos por defecto)
+  // 2. Respuesta base (Lo que ven los alumnos o si hay un error)
   let dataRespuesta = {
     usuario: {
       nombre: nombreUsuario,
@@ -55,23 +55,23 @@ router.get("/", (req, res) => {
 
   // 3. SI ES STAFF: Buscamos foto real y eventos de la BD
   if (esStaff) {
-    const sqlFoto =
-      "SELECT imagen_urls FROM responsable WHERE id_responsable = ?";
+    const sqlFoto = "SELECT imagen_urls FROM responsable WHERE id_responsable = ?";
 
     connection.query(sqlFoto, [idUsuario], (err, result) => {
       if (!err && result.length > 0 && result[0].imagen_urls) {
         try {
           const imgs = JSON.parse(result[0].imagen_urls);
-          if (imgs.length > 0)
+          if (imgs.length > 0) {
             dataRespuesta.usuario.imagen = `/uploads/responsables/${imgs[0]}`;
+          }
         } catch (e) {}
       }
 
       const hoy = new Date().toISOString().split("T")[0];
 
-      // NUEVO: Agregamos hora, lugar y ubicacion a la consulta SQL
+      // CORRECCIÓN AQUÍ: Pedimos hora_inicio y hora_fin
       const sqlEv =
-        "SELECT nombre_evento, imagen_urls, observaciones, fecha, hora, lugar, ubicacion FROM evento WHERE fecha >= ? ORDER BY fecha ASC";
+        "SELECT nombre_evento, imagen_urls, observaciones, fecha, hora_inicio, hora_fin, lugar, ubicacion FROM evento WHERE fecha >= ? ORDER BY fecha ASC";
 
       connection.query(sqlEv, [hoy], (errEv, resEv) => {
         if (!errEv) {
@@ -86,17 +86,23 @@ router.get("/", (req, res) => {
               nombre_evento: e.nombre_evento,
               observaciones: e.observaciones,
               fecha: e.fecha,
-              hora: e.hora, // Añadido
-              lugar: e.lugar, // Añadido
-              ubicacion: e.ubicacion, // Añadido
+              // CORRECCIÓN AQUÍ: Mapeamos las nuevas columnas
+              hora_inicio: e.hora_inicio, 
+              hora_fin: e.hora_fin,       
+              lugar: e.lugar, 
+              ubicacion: e.ubicacion, 
               imagen: img,
             };
           });
+        } else {
+            console.error("Error SQL al buscar eventos:", errEv);
         }
+        
+        // Enviamos la respuesta una vez que la base de datos contestó
         return res.json({ success: true, data: dataRespuesta });
       });
     });
-  }
+  } 
   // 4. SI ES ALUMNO: Enviamos la respuesta estática de inmediato
   else {
     return res.json({ success: true, data: dataRespuesta });
