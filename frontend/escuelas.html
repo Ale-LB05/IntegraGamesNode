@@ -1,146 +1,253 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
+  <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <title>Escuelas | IntegraGames</title>
     <link rel="icon" href="/img/logo.png" />
     <link href="/css/styles.css" rel="stylesheet" />
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" />
     <link href="/css/sb-admin-2.min.css" rel="stylesheet" />
-    
-    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+    <link
+      href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
-        body { background: #eef4ff; }
-        .text-primary { color: #4e73df !important; }
-        .text-secondary { color: #858796 !important; }
-        .bg-primary { background-color: #4e73df !important; }
-        .rounded-4 { border-radius: 1rem !important; }
-        .rounded-top-4 { border-top-left-radius: 1rem !important; border-top-right-radius: 1rem !important; }
-        .fw-bold { font-weight: bold; }
+      body {
+        background: #eef4ff;
+      }
+      .text-primary {
+        color: #4e73df !important;
+      }
+      .text-secondary {
+        color: #858796 !important;
+      }
+      .bg-primary {
+        background-color: #4e73df !important;
+      }
+      .rounded-4 {
+        border-radius: 1rem !important;
+      }
+      .rounded-top-4 {
+        border-top-left-radius: 1rem !important;
+        border-top-right-radius: 1rem !important;
+      }
+      .fw-bold {
+        font-weight: bold;
+      }
 
-        .card {
-            transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
-            transform: none !important;
-            border: none !important;
-            background: #ffffff;
-            border-radius: 20px !important;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
-        }
-        .card:hover {
-            transform: none !important;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12) !important;
-        }
+      .card {
+        transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        transform: none !important;
+        border: none !important;
+        background: #ffffff;
+        border-radius: 20px !important;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+      }
+      .card:hover {
+        transform: none !important;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12) !important;
+      }
 
-        /* Mejoras en la tabla */
-        .table thead { background: #4e73df; color: white; }
-        .table thead th { border-bottom: none !important; }
-        .table th, .table td { vertical-align: middle !important; }
-        .table tbody tr:hover { background-color: #f8f9fc; }
+      /* Mejoras en la tabla */
+      .table thead {
+        background: #4e73df;
+        color: white;
+      }
+      .table thead th {
+        border-bottom: none !important;
+      }
+      .table th,
+      .table td {
+        vertical-align: middle !important;
+      }
+      .table tbody tr:hover {
+        background-color: #f8f9fc;
+      }
 
-        /* Ocultar el buscador nativo de DataTables */
-        .dataTables_wrapper .dataTables_filter { display: none; }
-        .dataTables_wrapper .dataTables_length select {
-            border-radius: 10px; border: 1px solid #d1d3e2;
-        }
+      /* Ocultar el buscador nativo de DataTables */
+      .dataTables_wrapper .dataTables_filter {
+        display: none;
+      }
+      .dataTables_wrapper .dataTables_length select {
+        border-radius: 10px;
+        border: 1px solid #d1d3e2;
+      }
 
-        /* Color Negro para letras de paginación */
-        .page-item .page-link { color: #333333 !important; }
-        .page-item.active .page-link {
-            background-color: #4e73df !important;
-            border-color: #4e73df !important;
-            color: #ffffff !important;
-        }
-        .sidebar-brand { font-size: 20px; font-weight: bold; letter-spacing: 1px; }
+      /* Color Negro para letras de paginación */
+      .page-item .page-link {
+        color: #333333 !important;
+      }
+      .page-item.active .page-link {
+        background-color: #4e73df !important;
+        border-color: #4e73df !important;
+        color: #ffffff !important;
+      }
+      .sidebar-brand {
+        font-size: 20px;
+        font-weight: bold;
+        letter-spacing: 1px;
+      }
     </style>
-</head>
+  </head>
 
-<body id="page-top">
+  <body id="page-top">
     <div id="wrapper">
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/menu.html">
-                <div class="sidebar-brand-icon"><i class="fas fa-gamepad"></i></div>
-                <div class="sidebar-brand-text mx-2">IntegraGames</div>
-            </a>
+      <ul
+        class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
+        id="accordionSidebar"
+      >
+        <a
+          class="sidebar-brand d-flex align-items-center justify-content-center"
+          href="/menu.html"
+        >
+          <div class="sidebar-brand-icon"><i class="fas fa-gamepad"></i></div>
+          <div class="sidebar-brand-text mx-2">IntegraGames</div>
+        </a>
 
-            <hr class="sidebar-divider my-0" />
+        <hr class="sidebar-divider my-0" />
 
-            <li class="nav-item">
-                <a class="nav-link" href="/menu.html"><i class="fas fa-fw fa-home"></i> <span>Inicio</span></a>
-            </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/menu.html"
+            ><i class="fas fa-fw fa-home"></i> <span>Inicio</span></a
+          >
+        </li>
 
-            <hr class="sidebar-divider item-admin" />
-            <div class="sidebar-heading item-admin">Administración</div>
+        <hr class="sidebar-divider item-admin" />
+        <div class="sidebar-heading item-admin">Administración</div>
 
-            <li class="nav-item item-admin" id="menuPersonal">
-                <a class="nav-link" href="/personal.html"><i class="fas fa-fw fa-user"></i> <span>Personal</span></a>
-            </li>
-            <li class="nav-item item-admin">
-                <a class="nav-link" href="/eventos.html"><i class="fas fa-fw fa-calendar-alt"></i> <span>Eventos</span></a>
-            </li>
-            <li class="nav-item active item-admin" id="menuEscuelas">
-                <a class="nav-link" href="/escuelas.html"><i class="fas fa-fw fa-school"></i> <span>Escuelas</span></a>
-            </li>
+        <li class="nav-item item-admin" id="menuPersonal">
+          <a class="nav-link" href="/personal.html"
+            ><i class="fas fa-fw fa-user"></i> <span>Personal</span></a
+          >
+        </li>
+        <li class="nav-item item-admin">
+          <a class="nav-link" href="/eventos.html"
+            ><i class="fas fa-fw fa-calendar-alt"></i> <span>Eventos</span></a
+          >
+        </li>
+        <li class="nav-item active item-admin" id="menuEscuelas">
+          <a class="nav-link" href="/escuelas.html"
+            ><i class="fas fa-fw fa-school"></i> <span>Escuelas</span></a
+          >
+        </li>
 
-            <li class="nav-item item-admin">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsuarios">
-                    <i class="fas fa-fw fa-users"></i> <span>Historial</span>
-                </a>
-                <div id="collapseUsuarios" class="collapse">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Historial:</h6>
-                        <a class="collapse-item" href="/encargadoEvento.html"><i class="fas fa-user-tie"></i> Eventos</a>
-                        <a class="collapse-item" href="/lista.html"><i class="fas fa-users"></i> Participantes</a>
-                    </div>
-                </div>
-            </li>
-
-            <hr class="sidebar-divider" />
-            <div class="sidebar-heading">Información</div>
-            <li class="nav-item">
-                <a class="nav-link" href="https://ut-morelia.edu.mx" target="_blank"><i class="fas fa-fw fa-university"></i> <span>UTM</span></a>
-            </li>
-
-            <hr class="sidebar-divider" />
-            <div class="sidebar-heading">Contacto</div>
-            <li class="nav-item">
-                <a class="nav-link" href="https://www.facebook.com/share/1JrTM7N5jB/" target="_blank"><i class="fab fa-fw fa-facebook"></i> <span>Facebook</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://www.instagram.com/utmmorelia?igsh=NzBsNHVlYTRyeTZk" target="_blank"><i class="fab fa-fw fa-instagram"></i> <span>Instagram</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="https://www.tiktok.com/@utmorelia?_r=1&_t=ZS-94h24oJcmpk" target="_blank"><i class="fab fa-fw fa-tiktok"></i> <span>TikTok</span></a>
-            </li>
-
-            <hr class="sidebar-divider" />
-            <div class="sidebar-heading">Sesión</div>
-            <li class="nav-item">
-                <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">
-                    <i class="fas fa-fw fa-sign-out-alt"></i> <span>Salir</span>
-                </a>
-            </li>
-
-            <hr class="sidebar-divider d-none d-md-block" />
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        <li class="nav-item item-admin">
+          <a
+            class="nav-link collapsed"
+            href="#"
+            data-toggle="collapse"
+            data-target="#collapseUsuarios"
+          >
+            <i class="fas fa-fw fa-users"></i> <span>Historial</span>
+          </a>
+          <div id="collapseUsuarios" class="collapse">
+            <div class="bg-white py-2 collapse-inner rounded">
+              <h6 class="collapse-header">Historial:</h6>
+              <a class="collapse-item" href="/encargadoEvento.html"
+                ><i class="fas fa-user-tie"></i> Eventos</a
+              >
+              <a class="collapse-item" href="/lista.html"
+                ><i class="fas fa-users"></i> Participantes</a
+              >
             </div>
-        </ul>
+          </div>
+        </li>
 
-        <div id="content-wrapper" class="d-flex flex-column">
-            <div id="content">
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-2"><i class="fa fa-bars"></i></button>
-                    <img src="/img/logo.png" style="height: 70px" />
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="nombreUsuarioTop">Cargando...</span>
-                                <img class="img-profile rounded-circle" src="/img/user.jpg" style="object-fit: cover" />
-                            </a>
-                            <div
+        <hr class="sidebar-divider" />
+        <div class="sidebar-heading">Información</div>
+        <li class="nav-item">
+          <a class="nav-link" href="https://ut-morelia.edu.mx" target="_blank"
+            ><i class="fas fa-fw fa-university"></i> <span>UTM</span></a
+          >
+        </li>
+
+        <hr class="sidebar-divider" />
+        <div class="sidebar-heading">Contacto</div>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            href="https://www.facebook.com/share/1JrTM7N5jB/"
+            target="_blank"
+            ><i class="fab fa-fw fa-facebook"></i> <span>Facebook</span></a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            href="https://www.instagram.com/utmmorelia?igsh=NzBsNHVlYTRyeTZk"
+            target="_blank"
+            ><i class="fab fa-fw fa-instagram"></i> <span>Instagram</span></a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            href="https://www.tiktok.com/@utmorelia?_r=1&_t=ZS-94h24oJcmpk"
+            target="_blank"
+            ><i class="fab fa-fw fa-tiktok"></i> <span>TikTok</span></a
+          >
+        </li>
+
+        <hr class="sidebar-divider" />
+        <div class="sidebar-heading">Sesión</div>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            href="#"
+            data-toggle="modal"
+            data-target="#logoutModal"
+          >
+            <i class="fas fa-fw fa-sign-out-alt"></i> <span>Salir</span>
+          </a>
+        </li>
+
+        <hr class="sidebar-divider d-none d-md-block" />
+        <div class="text-center d-none d-md-inline">
+          <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+      </ul>
+
+      <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+          <nav
+            class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow"
+          >
+            <button
+              id="sidebarToggleTop"
+              class="btn btn-link d-md-none rounded-circle mr-2"
+            >
+              <i class="fa fa-bars"></i>
+            </button>
+            <img src="/img/logo.png" style="height: 70px" />
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item dropdown no-arrow">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="userDropdown"
+                  role="button"
+                  data-toggle="dropdown"
+                >
+                  <span
+                    class="mr-2 d-none d-lg-inline text-gray-600 small"
+                    id="nombreUsuarioTop"
+                    >Cargando...</span
+                  >
+                  <img
+                    class="img-profile rounded-circle"
+                    id="imgUsuarioTop"
+                    src="/img/responsables/sinFoto.jpg"
+                    style="object-fit: cover"
+                  />
+                </a>
+                <div
                   class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                 >
                   <a class="dropdown-item" href="/perfil.html">
@@ -160,180 +267,324 @@
                     Cerrar sesión
                   </a>
                 </div>
-                        </li>
-                    </ul>
-                </nav>
+              </li>
+            </ul>
+          </nav>
 
-                <div class="container-fluid mt-4">
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4 flex-wrap">
-                        <h1 class="h3 text-gray-800 mb-2 fw-bold">Gestión de Escuelas</h1>
-                        <div class="d-flex align-items-center flex-wrap">
-                            <div class="input-group mr-2 mb-2" style="width: 350px;">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-white border-right-0"><i class="fas fa-search text-primary"></i></span>
-                                </div>
-                                <input type="text" id="buscadorPersonalizado" class="form-control border-left-0" placeholder="Buscar escuela...">
-                            </div>
-                            <button class="btn btn-success mb-2 shadow-sm rounded-pill px-4" data-toggle="modal" data-target="#modalAgregar">
-                                <i class="fas fa-plus mr-1"></i> Nueva Escuela
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="card shadow mb-4">
-                        <div class="card-body p-4">
-                            <div class="table-responsive">
-                                <table class="table table-bordered text-center w-100" id="tablaEscuelas">
-                                    <thead>
-                                        <tr>
-                                            <th>Nombre de la Escuela</th>
-                                            <th>Contacto Directo</th>
-                                            <th>Dirección</th>
-                                            <th>Teléfono</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="cuerpoTablaEscuelas">
-                                        </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+          <div class="container-fluid mt-4">
+            <div
+              class="d-sm-flex align-items-center justify-content-between mb-4 flex-wrap"
+            >
+              <h1 class="h3 text-gray-800 mb-2 fw-bold">Gestión de Escuelas</h1>
+              <div class="d-flex align-items-center flex-wrap">
+                <div class="input-group mr-2 mb-2" style="width: 350px">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text bg-white border-right-0"
+                      ><i class="fas fa-search text-primary"></i
+                    ></span>
+                  </div>
+                  <input
+                    type="text"
+                    id="buscadorPersonalizado"
+                    class="form-control border-left-0"
+                    placeholder="Buscar escuela..."
+                  />
                 </div>
+                <button
+                  class="btn btn-success mb-2 shadow-sm rounded-pill px-4"
+                  data-toggle="modal"
+                  data-target="#modalAgregar"
+                >
+                  <i class="fas fa-plus mr-1"></i> Nueva Escuela
+                </button>
+              </div>
             </div>
 
-            <footer class="sticky-footer" style="background-color: #ffffff !important; border-top: 1px solid #e3e6f0;">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span style="color: #858796 !important; font-size: 0.9rem;">Copyright &copy; IntegraGames 2026</span>
-                    </div>
+            <div class="card shadow mb-4">
+              <div class="card-body p-4">
+                <div class="table-responsive">
+                  <table
+                    class="table table-bordered text-center w-100"
+                    id="tablaEscuelas"
+                  >
+                    <thead>
+                      <tr>
+                        <th>Nombre de la Escuela</th>
+                        <th>Contacto Directo</th>
+                        <th>Dirección</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody id="cuerpoTablaEscuelas"></tbody>
+                  </table>
                 </div>
-            </footer>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <footer
+          class="sticky-footer"
+          style="
+            background-color: #ffffff !important;
+            border-top: 1px solid #e3e6f0;
+          "
+        >
+          <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+              <span style="color: #858796 !important; font-size: 0.9rem"
+                >Copyright &copy; IntegraGames 2026</span
+              >
+            </div>
+          </div>
+        </footer>
+      </div>
     </div>
 
     <div class="modal fade" id="modalAgregar" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <form id="formAgregarEscuela" class="modal-content shadow-lg border-0 rounded-4">
-                <div class="modal-header bg-primary text-white rounded-top-4">
-                    <h5 class="mb-0 fw-bold"><i class="fas fa-school mr-2"></i> Nueva Escuela</h5>
-                    <button type="button" class="close text-white" data-dismiss="modal">×</button>
-                </div>
-                <div class="modal-body p-4">
-                    <h6 class="fw-bold mb-3 border-bottom pb-2" style="color: #4e73df;">
-                        <i class="fas fa-building mr-1"></i> Datos de la Institución
-                    </h6>
-                    <label class="fw-bold text-muted small">Nombre de la Escuela</label>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text bg-light border-right-0" style="color: #4e73df;"><i class="fas fa-university"></i></span>
-                        <input type="text" id="addNombre" class="form-control border-left-0" placeholder="Ej: Preparatoria Benito Juárez" required>
-                    </div>
+      <div class="modal-dialog modal-dialog-centered">
+        <form
+          id="formAgregarEscuela"
+          class="modal-content shadow-lg border-0 rounded-4"
+        >
+          <div class="modal-header bg-primary text-white rounded-top-4">
+            <h5 class="mb-0 fw-bold">
+              <i class="fas fa-school mr-2"></i> Nueva Escuela
+            </h5>
+            <button type="button" class="close text-white" data-dismiss="modal">
+              ×
+            </button>
+          </div>
+          <div class="modal-body p-4">
+            <h6 class="fw-bold mb-3 border-bottom pb-2" style="color: #4e73df">
+              <i class="fas fa-building mr-1"></i> Datos de la Institución
+            </h6>
+            <label class="fw-bold text-muted small">Nombre de la Escuela</label>
+            <div class="input-group mb-3">
+              <span
+                class="input-group-text bg-light border-right-0"
+                style="color: #4e73df"
+                ><i class="fas fa-university"></i
+              ></span>
+              <input
+                type="text"
+                id="addNombre"
+                class="form-control border-left-0"
+                placeholder="Ej: Preparatoria Benito Juárez"
+                required
+              />
+            </div>
 
-                    <label class="fw-bold text-muted small">Dirección Física</label>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text bg-light border-right-0" style="color: #4e73df;"><i class="fas fa-map-marker-alt"></i></span>
-                        <textarea id="addDireccion" class="form-control border-left-0" rows="2" placeholder="Calle, Número, Colonia, Municipio" required></textarea>
-                    </div>
+            <label class="fw-bold text-muted small">Dirección Física</label>
+            <div class="input-group mb-3">
+              <span
+                class="input-group-text bg-light border-right-0"
+                style="color: #4e73df"
+                ><i class="fas fa-map-marker-alt"></i
+              ></span>
+              <textarea
+                id="addDireccion"
+                class="form-control border-left-0"
+                rows="2"
+                placeholder="Calle, Número, Colonia, Municipio"
+                required
+              ></textarea>
+            </div>
 
-                    <h6 class="fw-bold mb-3 mt-4 border-bottom pb-2" style="color: #4e73df;">
-                        <i class="fas fa-address-book mr-1"></i> Información de Contacto
-                    </h6>
-                    <label class="fw-bold text-muted small">Nombre del Director o Encargado</label>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text bg-light border-right-0" style="color: #4e73df;"><i class="fas fa-user-tie"></i></span>
-                        <input type="text" id="addContacto" class="form-control border-left-0" placeholder="Ej: Mtro. Juan Pérez" required>
-                    </div>
+            <h6
+              class="fw-bold mb-3 mt-4 border-bottom pb-2"
+              style="color: #4e73df"
+            >
+              <i class="fas fa-address-book mr-1"></i> Información de Contacto
+            </h6>
+            <label class="fw-bold text-muted small"
+              >Nombre del Director o Encargado</label
+            >
+            <div class="input-group mb-3">
+              <span
+                class="input-group-text bg-light border-right-0"
+                style="color: #4e73df"
+                ><i class="fas fa-user-tie"></i
+              ></span>
+              <input
+                type="text"
+                id="addContacto"
+                class="form-control border-left-0"
+                placeholder="Ej: Mtro. Juan Pérez"
+                required
+              />
+            </div>
 
-                    <label class="fw-bold text-muted small">Teléfono (10 dígitos)</label>
-                    <div class="input-group mb-2">
-                        <span class="input-group-text bg-light border-right-0" style="color: #4e73df;"><i class="fas fa-phone"></i></span>
-                        <input type="text" id="addTelefono" class="form-control input-telefono border-left-0" maxlength="12" placeholder="Ej: 443 325 2165" required>
-                    </div>
-                </div>
-                <div class="modal-footer bg-light border-top-0">
-                    <button type="button" class="btn btn-outline-danger px-4 rounded-pill" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-success fw-bold text-white px-4 rounded-pill shadow-sm">
-                        <i class="fas fa-save mr-2"></i> Guardar Escuela
-                    </button>
-                </div>
-            </form>
-        </div>
+            <label class="fw-bold text-muted small"
+              >Teléfono (10 dígitos)</label
+            >
+            <div class="input-group mb-2">
+              <span
+                class="input-group-text bg-light border-right-0"
+                style="color: #4e73df"
+                ><i class="fas fa-phone"></i
+              ></span>
+              <input
+                type="text"
+                id="addTelefono"
+                class="form-control border-left-0"
+                maxlength="10"
+                pattern="[0-9]{10}"
+                placeholder="Ej: 4433252165"
+                required
+                title="Debe contener 10 números exactos sin espacios ni guiones"
+              />
+            </div>
+          </div>
+          <div class="modal-footer bg-light border-top-0">
+            <button
+              type="button"
+              class="btn btn-outline-danger px-4 rounded-pill"
+              data-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="btn btn-success fw-bold text-white px-4 rounded-pill shadow-sm"
+            >
+              <i class="fas fa-save mr-2"></i> Guardar Escuela
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <form id="formEditarEscuela" class="modal-content shadow-lg border-0 rounded-4">
-                <div class="modal-header bg-info text-white rounded-top-4">
-                    <h5 class="mb-0 fw-bold"><i class="fas fa-edit mr-2"></i> Editar Escuela</h5>
-                    <button type="button" class="close text-white" data-dismiss="modal">×</button>
-                </div>
-                <div class="modal-body p-4">
-                    <input type="hidden" id="editId">
+      <div class="modal-dialog modal-dialog-centered">
+        <form
+          id="formEditarEscuela"
+          class="modal-content shadow-lg border-0 rounded-4"
+        >
+          <div class="modal-header bg-info text-white rounded-top-4">
+            <h5 class="mb-0 fw-bold">
+              <i class="fas fa-edit mr-2"></i> Editar Escuela
+            </h5>
+            <button type="button" class="close text-white" data-dismiss="modal">
+              ×
+            </button>
+          </div>
+          <div class="modal-body p-4">
+            <input type="hidden" id="editId" />
 
-                    <h6 class="fw-bold mb-3 border-bottom pb-2 text-info">
-                        <i class="fas fa-building mr-1"></i> Datos de la Institución
-                    </h6>
-                    <label class="fw-bold text-muted small">Nombre de la Escuela</label>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text bg-light border-right-0 text-info"><i class="fas fa-university"></i></span>
-                        <input type="text" id="editNombre" class="form-control border-left-0" required>
-                    </div>
+            <h6 class="fw-bold mb-3 border-bottom pb-2 text-info">
+              <i class="fas fa-building mr-1"></i> Datos de la Institución
+            </h6>
+            <label class="fw-bold text-muted small">Nombre de la Escuela</label>
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-light border-right-0 text-info"
+                ><i class="fas fa-university"></i
+              ></span>
+              <input
+                type="text"
+                id="editNombre"
+                class="form-control border-left-0"
+                required
+              />
+            </div>
 
-                    <label class="fw-bold text-muted small">Dirección Física</label>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text bg-light border-right-0 text-info"><i class="fas fa-map-marker-alt"></i></span>
-                        <textarea id="editDireccion" class="form-control border-left-0" rows="2" required></textarea>
-                    </div>
+            <label class="fw-bold text-muted small">Dirección Física</label>
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-light border-right-0 text-info"
+                ><i class="fas fa-map-marker-alt"></i
+              ></span>
+              <textarea
+                id="editDireccion"
+                class="form-control border-left-0"
+                rows="2"
+                required
+              ></textarea>
+            </div>
 
-                    <h6 class="fw-bold mb-3 mt-4 border-bottom pb-2 text-info">
-                        <i class="fas fa-address-book mr-1"></i> Información de Contacto
-                    </h6>
-                    <label class="fw-bold text-muted small">Nombre del Director o Encargado</label>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text bg-light border-right-0 text-info"><i class="fas fa-user-tie"></i></span>
-                        <input type="text" id="editContacto" class="form-control border-left-0" required>
-                    </div>
+            <h6 class="fw-bold mb-3 mt-4 border-bottom pb-2 text-info">
+              <i class="fas fa-address-book mr-1"></i> Información de Contacto
+            </h6>
+            <label class="fw-bold text-muted small"
+              >Nombre del Director o Encargado</label
+            >
+            <div class="input-group mb-3">
+              <span class="input-group-text bg-light border-right-0 text-info"
+                ><i class="fas fa-user-tie"></i
+              ></span>
+              <input
+                type="text"
+                id="editContacto"
+                class="form-control border-left-0"
+                required
+              />
+            </div>
 
-                    <label class="fw-bold text-muted small">Teléfono</label>
-                    <div class="input-group mb-2">
-                        <span class="input-group-text bg-light border-right-0 text-info"><i class="fas fa-phone"></i></span>
-                        <input type="text" id="editTelefono" class="form-control input-telefono border-left-0" maxlength="12" required>
-                    </div>
-                </div>
-                <div class="modal-footer bg-light border-top-0">
-                    <button type="button" class="btn btn-outline-danger px-4 rounded-pill" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-info fw-bold text-white px-4 rounded-pill shadow-sm">
-                        <i class="fas fa-save mr-2"></i> Guardar Cambios
-                    </button>
-                </div>
-            </form>
-        </div>
+            <label class="fw-bold text-muted small"
+              >Teléfono (10 dígitos)</label
+            >
+            <div class="input-group mb-2">
+              <span class="input-group-text bg-light border-right-0 text-info"
+                ><i class="fas fa-phone"></i
+              ></span>
+              <input
+                type="text"
+                id="editTelefono"
+                class="form-control border-left-0"
+                maxlength="10"
+                pattern="[0-9]{10}"
+                required
+                title="Debe contener 10 números exactos sin espacios ni guiones"
+              />
+            </div>
+          </div>
+          <div class="modal-footer bg-light border-top-0">
+            <button
+              type="button"
+              class="btn btn-outline-danger px-4 rounded-pill"
+              data-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="btn btn-info fw-bold text-white px-4 rounded-pill shadow-sm"
+            >
+              <i class="fas fa-save mr-2"></i> Guardar Cambios
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <div class="modal fade" id="logoutModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Cerrar sesión</h5>
-                    <button class="close" data-dismiss="modal">×</button>
-                </div>
-                <div class="modal-body">¿Seguro que deseas salir?</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-primary" onclick="cerrarSesion()">Cerrar sesión</button>
-                </div>
-            </div>
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Cerrar sesión</h5>
+            <button class="close" data-dismiss="modal">×</button>
+          </div>
+          <div class="modal-body">¿Seguro que deseas salir?</div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-dismiss="modal">
+              Cancelar
+            </button>
+            <button class="btn btn-primary" onclick="cerrarSesion()">
+              Cerrar sesión
+            </button>
+          </div>
         </div>
+      </div>
     </div>
 
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
-    
+
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
-    
+
     <script src="/js/sb-admin-2.min.js"></script>
     <script src="/js/escuelas.js"></script>
-</body>
+  </body>
 </html>

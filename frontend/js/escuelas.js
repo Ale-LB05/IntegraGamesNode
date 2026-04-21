@@ -2,38 +2,33 @@ const API_URL = "/api/escuelas";
 let dataTableInstance = null;
 
 window.onload = () => {
-    // 1. Configurar barra superior y permisos
     const usuario = localStorage.getItem("usuario") || "Usuario";
     const rol = (localStorage.getItem("rol") || "").toLowerCase();
     
     const nombreTop = document.getElementById("nombreUsuarioTop");
-    if(nombreTop) {
-        nombreTop.textContent = usuario + " - " + rol;
-    }
+    if(nombreTop) nombreTop.textContent = usuario + " - " + rol;
 
-    // ================= SOLUCIÓN DE FOTOGRAFÍA =================
-    let fotoPerfil = localStorage.getItem("foto");
+    // SOLUCIÓN FOTO PERFIL GLOBAL
+    const fotoGuardada = localStorage.getItem("foto");
+    const imgTopBar = document.getElementById("imgUsuarioTop") || document.querySelector(".img-profile");
 
-    if (!fotoPerfil || fotoPerfil === "undefined" || fotoPerfil === "null") {
-        fotoPerfil = "/img/responsables/sinFoto.jpg";
-    }
-
-    const imgTopBar = document.querySelector(".img-profile");
     if (imgTopBar) {
-        imgTopBar.src = fotoPerfil;
+        if (!fotoGuardada || fotoGuardada.includes("user.jpg") || fotoGuardada === "undefined") {
+            imgTopBar.src = "/img/responsables/sinFoto.jpg";
+        } else {
+            imgTopBar.src = fotoGuardada;
+        }
+        
         imgTopBar.onerror = function() {
             this.src = "/img/responsables/sinFoto.jpg";
         };
     }
 
-    // ================= SEGURIDAD Y ROLES =================
-    // Redirigir si es participante (no deben entrar aquí)
     if (rol === "participante") {
         window.location.href = "/menu.html";
         return;
     }
 
-    // Ocultar menús si es promotor
     if (rol === "promotor") {
         const itemPersonal = document.getElementById("menuPersonal");
         const itemEscuelas = document.getElementById("menuEscuelas");
@@ -41,12 +36,9 @@ window.onload = () => {
         if (itemEscuelas) itemEscuelas.style.display = "none";
     }
 
-    // 2. Inicializar funciones de la página
     cargarEscuelas();
-    aplicarMascaraTelefono();
 };
 
-// ================= CARGAR DATOS Y DIBUJAR DATATABLES =================
 async function cargarEscuelas() {
     const token = localStorage.getItem("token");
     try {
@@ -56,21 +48,17 @@ async function cargarEscuelas() {
         const result = await res.json();
         
         let datos = [];
-        if (Array.isArray(result)) {
-            datos = result;
-        } else if (result.data && Array.isArray(result.data)) {
-            datos = result.data;
-        }
+        if (Array.isArray(result)) datos = result;
+        else if (result.data && Array.isArray(result.data)) datos = result.data;
         
         dibujarTabla(datos);
     } catch (error) {
-        console.error("Error al cargar escuelas:", error);
-        Swal.fire("Error", "No se pudo conectar al servidor", "error");
+        console.error("Error cargando escuelas:", error);
+        Swal.fire("Error", "No se pudo cargar la lista de escuelas", "error");
     }
 }
 
 function dibujarTabla(datos) {
-    // Si la tabla ya existía, la destruimos para recargarla limpia
     if (dataTableInstance !== null) {
         dataTableInstance.destroy();
     }
@@ -80,28 +68,26 @@ function dibujarTabla(datos) {
     tbody.innerHTML = "";
 
     datos.forEach(escuela => {
-        // Escapamos comillas para evitar errores en los botones
-        const nombreEscapado = escuela.nombre_escuela.replace(/'/g, "\\'");
-        const contactoEscapado = (escuela.contacto || "").replace(/'/g, "\\'");
-        const direccionEscapada = (escuela.direccion || "").replace(/'/g, "\\'");
+        // Empaquetamos TODOS los datos de forma segura para que no se rompan con comillas
+        const dataSegura = JSON.stringify(escuela).replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+        const telefonoStr = escuela.telefono ? String(escuela.telefono) : "-";
+        const nombreMostrar = escuela.nombre_escuela || escuela.nombre || "Sin nombre";
 
         tbody.innerHTML += `
             <tr>
-                <td class="align-middle fw-bold text-dark text-left pl-4">${escuela.nombre_escuela}</td>
+                <td class="align-middle fw-bold text-dark text-left pl-4">${nombreMostrar}</td>
                 <td class="align-middle text-secondary">${escuela.contacto || '-'}</td>
                 <td class="align-middle text-muted text-left"><small>${escuela.direccion || '-'}</small></td>
                 <td class="align-middle">
                     <span class="badge bg-light text-dark border px-3 py-2 rounded-pill" style="font-weight: 500; font-size: 0.85rem;">
-                        <i class="fas fa-phone-alt mr-1 text-success small"></i> ${escuela.telefono || '-'}
+                        <i class="fas fa-phone-alt mr-1 text-success small"></i> ${telefonoStr}
                     </span>
                 </td>
                 <td class="align-middle">
-                    <button class="btn btn-info btn-sm shadow-sm rounded-circle" data-toggle="modal" data-target="#modalEditar" 
-                        onclick="prepararEditar('${escuela.id_escuela}', '${nombreEscapado}', '${contactoEscapado}', '${direccionEscapada}', '${escuela.telefono}')">
+                    <button class="btn btn-info btn-sm shadow-sm rounded-circle btn-editar" data-info="${dataSegura}">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn btn-danger btn-sm shadow-sm rounded-circle ml-1" 
-                        onclick="eliminarEscuela('${escuela.id_escuela}', '${nombreEscapado}')">
+                    <button class="btn btn-danger btn-sm shadow-sm rounded-circle btn-eliminar" data-info="${dataSegura}">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
@@ -109,32 +95,52 @@ function dibujarTabla(datos) {
         `;
     });
 
-    // Inicializar DataTables
     dataTableInstance = $('#tablaEscuelas').DataTable({
         "pageLength": 10,
         "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todas"]],
         "language": {
             "lengthMenu": "Mostrar _MENU_ escuelas",
-            "zeroRecords": "No se encontraron escuelas registradas",
-            "info": "Mostrando página _PAGE_ de _PAGES_",
-            "infoEmpty": "No hay datos disponibles",
+            "zeroRecords": "No se encontraron escuelas",
+            "info": "Página _PAGE_ de _PAGES_",
+            "infoEmpty": "No hay datos",
             "infoFiltered": "(filtrado de _MAX_ totales)",
-            "paginate": {
-                "first": "Primera",
-                "last": "Última",
-                "next": "Siguiente >",
-                "previous": "< Anterior"
-            }
+            "paginate": { "first": "Primera", "last": "Última", "next": "Siguiente >", "previous": "< Anterior" }
         }
     });
 
-    // Enlazar buscador personalizado
     $('#buscadorPersonalizado').off('keyup').on('keyup', function() {
         dataTableInstance.search(this.value).draw();
     });
 }
 
-// ================= AGREGAR ESCUELA =================
+// ================= BOTONES EDITAR Y ELIMINAR (Delegaicón Segura) =================
+document.addEventListener("click", (e) => {
+    // Escuchar botón Editar
+    const btnEditar = e.target.closest(".btn-editar");
+    if (btnEditar) {
+        const data = JSON.parse(btnEditar.getAttribute("data-info"));
+        
+        // Asignamos asegurándonos de encontrar el ID sea cual sea su nombre en la base de datos
+        document.getElementById("editId").value = data.id_escuela || data.id || "";
+        document.getElementById("editNombre").value = data.nombre_escuela || data.nombre || "";
+        document.getElementById("editContacto").value = data.contacto || "";
+        document.getElementById("editDireccion").value = data.direccion || "";
+        document.getElementById("editTelefono").value = String(data.telefono || "").replace(/\D/g, '');
+        
+        $("#modalEditar").modal("show");
+    }
+
+    // Escuchar botón Eliminar
+    const btnEliminar = e.target.closest(".btn-eliminar");
+    if (btnEliminar) {
+        const data = JSON.parse(btnEliminar.getAttribute("data-info"));
+        const id = data.id_escuela || data.id || "";
+        const nombre = data.nombre_escuela || data.nombre || "";
+        eliminarEscuela(id, nombre);
+    }
+});
+
+// ================= CREAR ESCUELA =================
 const formAgregar = document.getElementById("formAgregarEscuela");
 if (formAgregar) {
     formAgregar.addEventListener("submit", async (e) => {
@@ -151,43 +157,33 @@ if (formAgregar) {
             nombre: document.getElementById("addNombre").value,
             contacto: document.getElementById("addContacto").value,
             direccion: document.getElementById("addDireccion").value,
-            telefono: document.getElementById("addTelefono").value
+            telefono: parseInt(telefonoLimpio, 10) || 0 // Si falla, manda 0 para que no crashee la BD
         };
 
         const token = localStorage.getItem("token");
         try {
             const res = await fetch(`${API_URL}/crear`, {
                 method: "POST",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}` 
-                },
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
                 body: JSON.stringify(body)
             });
             const data = await res.json();
-            if (data.success) {
+            
+            if (res.ok && data.success) {
                 $("#modalAgregar").modal("hide");
                 formAgregar.reset();
                 Swal.fire("Éxito", "Escuela agregada con éxito", "success");
                 cargarEscuelas();
             } else {
-                Swal.fire("Error", data.error, "error");
+                Swal.fire("Error", data.error || "No se pudo agregar", "error");
             }
-        } catch (err) {
-            Swal.fire("Error", "Problema de conexión", "error");
+        } catch (err) { 
+            Swal.fire("Error", "Error al conectar con el servidor", "error"); 
         }
     });
 }
 
 // ================= EDITAR ESCUELA =================
-function prepararEditar(id, nombre, contacto, direccion, telefono) {
-    document.getElementById("editId").value = id;
-    document.getElementById("editNombre").value = nombre;
-    document.getElementById("editContacto").value = contacto;
-    document.getElementById("editDireccion").value = direccion;
-    document.getElementById("editTelefono").value = telefono;
-}
-
 const formEditar = document.getElementById("formEditarEscuela");
 if (formEditar) {
     formEditar.addEventListener("submit", async (e) => {
@@ -205,29 +201,27 @@ if (formEditar) {
             nombre: document.getElementById("editNombre").value,
             contacto: document.getElementById("editContacto").value,
             direccion: document.getElementById("editDireccion").value,
-            telefono: document.getElementById("editTelefono").value
+            telefono: parseInt(telefonoLimpio, 10) || 0
         };
 
         const token = localStorage.getItem("token");
         try {
             const res = await fetch(`${API_URL}/editar`, {
                 method: "POST",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}` 
-                },
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
                 body: JSON.stringify(body)
             });
             const data = await res.json();
-            if (data.success) {
+            
+            if (res.ok && data.success) {
                 $("#modalEditar").modal("hide");
                 Swal.fire("Éxito", "Escuela actualizada", "success");
                 cargarEscuelas();
             } else {
-                Swal.fire("Error", data.error, "error");
+                Swal.fire("Error", data.error || "No se pudo actualizar", "error");
             }
-        } catch (err) {
-            Swal.fire("Error", "Problema de conexión", "error");
+        } catch (err) { 
+            Swal.fire("Error", "Error al conectar con el servidor", "error"); 
         }
     });
 }
@@ -236,14 +230,13 @@ if (formEditar) {
 function eliminarEscuela(id, nombre) {
     Swal.fire({
         title: '¿Estás seguro?',
-        text: `Estás a punto de eliminar a ${nombre}. Si la escuela tiene historial en eventos, se bloqueará la acción.`,
+        text: `Estás a punto de eliminar a ${nombre}.`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#e74a3b',
         cancelButtonColor: '#858796',
-        confirmButtonText: '<i class="fas fa-trash"></i> Sí, eliminar',
-        cancelButtonText: 'Cancelar',
-        reverseButtons: true
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
     }).then(async (result) => {
         if (result.isConfirmed) {
             const token = localStorage.getItem("token");
@@ -253,26 +246,17 @@ function eliminarEscuela(id, nombre) {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 const data = await res.json();
-                if (data.success) {
+                
+                if (res.ok && data.success) {
                     Swal.fire("Eliminado", "Escuela eliminada", "success");
                     cargarEscuelas();
                 } else {
-                    Swal.fire("Error", data.error, "error");
+                    Swal.fire("Error", data.error || "No se pudo eliminar", "error");
                 }
-            } catch (err) {
-                Swal.fire("Error", "Problema de conexión", "error");
+            } catch (err) { 
+                Swal.fire("Error", "Error al conectar con el servidor", "error"); 
             }
         }
-    });
-}
-
-// ================= UTILIDADES =================
-function aplicarMascaraTelefono() {
-    document.querySelectorAll('.input-telefono').forEach(input => {
-        input.addEventListener('input', function(e) {
-            let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-            e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-        });
     });
 }
 

@@ -17,12 +17,20 @@ async function cargarEscuelas() {
 
   try {
     const res = await fetch(API_ESCUELAS);
-    const data = await res.json();
+    const result = await res.json(); // Le llamamos 'result' a la respuesta cruda
+
+    // SOLUCIÓN: Desempacamos el arreglo. Si viene dentro de result.data, lo sacamos.
+    let escuelas = [];
+    if (Array.isArray(result)) {
+        escuelas = result; // Por si algún día devuelve el arreglo directo
+    } else if (result.success && Array.isArray(result.data)) {
+        escuelas = result.data; // Aquí saca los datos de { success: true, data: [...] }
+    }
 
     select.innerHTML = '<option value="">Buscar escuela...</option>';
 
-    // Llenar el select con los datos de la base de datos
-    data.forEach((e) => {
+    // Llenar el select con los datos correctos
+    escuelas.forEach((e) => {
       select.innerHTML += `<option value="${e.id_escuela}">${e.nombre_escuela}</option>`;
     });
 
